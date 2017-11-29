@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.5.0'
+    }
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0.0"
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:25.3.1'
+}
+
+publish {
+    groupId = 'com.yuyakaido.android'
+    artifactId = 'card-stack-view'
+    publishVersion = '1.0.0-beta8'
+    uploadName = 'CardStackView'
+    website = 'https://github.com/yuyakaido/CardStackView'
+}
