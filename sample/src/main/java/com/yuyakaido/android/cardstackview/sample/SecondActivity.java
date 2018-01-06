@@ -4,13 +4,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.icu.text.StringPrepParseException;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.location.*;
 
@@ -93,12 +97,13 @@ public class SecondActivity extends AppCompatActivity {
             text.setText(profile.getFirstName() + " " + profile.getLastName());
         }
 
-        Button Logout = (Button) findViewById((R.id.logout));
+        /*Button Logout = (Button) findViewById((R.id.logout));
         Logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity();
             }
         });
+        */
 
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
@@ -124,13 +129,15 @@ public class SecondActivity extends AppCompatActivity {
 
     private void findEvents() {
         Intent eventIntent = new Intent(this, EventDisplayActivity.class);
+        Log.d("TestEvent",Integer.toString(events.size()));
+        Log.e("TEST", "FOUR");
         eventIntent.putExtra("eventList", events);
         startActivity(eventIntent);
     }
 
     private void getPlaces() {
-        double longitude = -79.3832;
-        double latitude = 43.6532;
+        double longitude = 100;
+        double latitude = 100;
         Log.e("TEST","ONE");
 
         final LocationListener locationListener = new LocationListener() {
@@ -165,7 +172,8 @@ public class SecondActivity extends AppCompatActivity {
                     longitude = location.getLongitude();
                     latitude = location.getLatitude();
                 }
-
+                Log.d("longitude", Double.toString(longitude));
+                Log.d("latitude", Double.toString(latitude));
                 Log.e("TEST","TWO");
 
                 GraphRequest request = GraphRequest.newGraphPathRequest(
@@ -236,9 +244,10 @@ public class SecondActivity extends AppCompatActivity {
     private void parseEvents(GraphResponse events_response) {
 
         try {
-            JSONObject evts = events_response.getJSONObject(); //new JSONObject(places.toString());//.getRawResponse();
+            JSONObject evts = events_response.getJSONObject();
             if(evts != null){
                 JSONArray earray = evts.getJSONArray("data");
+                Log.d("Array length", Integer.toString(earray.length()));
                 for(int i = 0; i < earray.length(); i++) {
                     JSONObject event = earray.getJSONObject(i);
                     Event new_event = new Event(event);
@@ -249,9 +258,6 @@ public class SecondActivity extends AppCompatActivity {
         }catch (Exception ex){
             Log.e(TAG, "Parse Event: ", ex);
         }
-        /*for (int a = 0; a < events.size(); a++) {
-            if (textbox.getTextSize() < 5000) textbox.append("Event" + a + ": " + events.get(a).toString());
-        }*/
     }
 
 
@@ -302,6 +308,30 @@ public class SecondActivity extends AppCompatActivity {
         profileTracker.stopTracking();
     }
 
+    private void Logout() {
+        LoginManager.getInstance().logOut();
+
+        Intent leave = new Intent(this, MainActivity.class);
+        //leave.setAction(Intent.ACTION_MAIN);
+
+        startActivity(leave);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_activity_main_logout:
+                Logout();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

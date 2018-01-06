@@ -17,31 +17,61 @@
     </com.facebook.login.widget.ProfilePictureView>
 
     <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/search"
-        android:layout_centerVertical="true"
-        android:text="Log Out" />
-
-    <Button
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/logout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="33dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/profilePicture"
+        android:layout_marginBottom="21dp"
         android:text="Search" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/search"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
+        android:layout_alignStart="@+id/editText"
+        android:layout_below="@+id/profilePicture"
+        android:layout_marginTop="22dp"
         tools:layout_editor_absoluteX="163dp"
         tools:layout_editor_absoluteY="171dp" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="DD/MM/YYYY"
+        android:inputType="date" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/search"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="39dp"
+        android:entries="@array/locations_array" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:text="Starting Date" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spinner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="Location" />
 
 
 </RelativeLayout>
