@@ -1,6 +1,7 @@
 package com.yuyakaido.android.cardstackview.sample;
 
 import android.Manifest;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,13 +11,16 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.location.*;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.AccessToken;
@@ -38,7 +42,7 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-public class SecondActivity extends AppCompatActivity {
+public class SecondActivity extends AppCompatActivity implements DatePickerFragment.DatePickerDialogListener {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     CallbackManager callbackManager;
     AccessTokenTracker accessTokenTracker;
@@ -73,6 +77,9 @@ public class SecondActivity extends AppCompatActivity {
 
         search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+              //  getLocation();
+
                 findEvents();
             }
         });
@@ -105,7 +112,7 @@ public class SecondActivity extends AppCompatActivity {
         });
         */
 
-        // Here, thisActivity is the current activity
+      // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -125,6 +132,49 @@ public class SecondActivity extends AppCompatActivity {
         }
         else { getPlaces(); }
 
+    Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
+
+    dateSpinner.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            showDatePickerDialog(view);
+        }
+    });
+
+    }
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "Date");
+    }
+
+    public void setButtontext(DialogFragment dialog, String l){
+        Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
+        dateSpinner.setText(l);
+    }
+    private void getLocation(){
+
+        //TODO: get spinner input and set location accordingly
+        //TODo: change date picker to spinner + dialog and set until date
+
+        // Here, thisActivity is the current activity
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale( this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions( this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+            }
+        }
+        else { getPlaces(); }
     }
 
     private void findEvents() {
@@ -234,8 +284,8 @@ public class SecondActivity extends AppCompatActivity {
         parameters.putString("type", "event");
         parameters.putString("q", p);
         parameters.putString("fields", "name,description,id,cover,place,end_time,start_time");
-        parameters.putString("since", "2017-11-12");
-        parameters.putString("until", "2017-12-31");
+        parameters.putString("since", "2018-01-08");
+        parameters.putString("until", "2018-01-30");
         parameters.putString("limit", "50");
         request.setParameters(parameters);
         request.executeAsync();
