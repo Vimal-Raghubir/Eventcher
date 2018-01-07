@@ -37,7 +37,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.sql.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -48,6 +53,8 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     AccessTokenTracker accessTokenTracker;
     ProfileTracker profileTracker;
     AccessToken accessToken;
+    String startDate;
+    String untilDate;
     Profile profileCurrent;
 
     ArrayList<Event> events;
@@ -73,13 +80,22 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         // If the access token is available already assign it.
         accessToken = AccessToken.getCurrentAccessToken();
 
+        final Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
+
+        dateSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(view);
+            }
+        });
+
         Button search = (Button) findViewById(R.id.search);
 
         search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                checkValues(dateSpinner);
 
-                getLocation();
-
+                //getLocation();
                 //findEvents();
             }
         });
@@ -114,14 +130,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
       // Here, thisActivity is the current activity
         //getLocation();
-    Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
 
-    dateSpinner.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            showDatePickerDialog(view);
-        }
-    });
 
     }
     public void showDatePickerDialog(View v) {
@@ -168,8 +177,8 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     private void getPlaces() {
-        double longitude = 100;
-        double latitude = 100;
+        double longitude = -79.3832;
+        double latitude = 43.6532;
         Log.e("TEST","ONE");
 
         final LocationListener locationListener = new LocationListener() {
@@ -271,8 +280,8 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         parameters.putString("type", "event");
         parameters.putString("q", p);
         parameters.putString("fields", "name,description,id,cover,place,end_time,start_time");
-        parameters.putString("since", "2018-01-08");
-        parameters.putString("until", "2018-01-30");
+        parameters.putString("since", startDate);
+        parameters.putString("until", untilDate);
         parameters.putString("limit", "50");
         request.setParameters(parameters);
         request.executeAsync();
@@ -370,5 +379,37 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         return super.onOptionsItemSelected(item);
     }
 
+    public void checkValues(Button date) {
+        String[] length = {"31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"};
+        String[] values = date.getText().toString().split("-");
+        int newMonth = Integer.parseInt(values[1]);
+        newMonth = newMonth + 1;
 
+        String endDate = values[0] + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
+
+        Date todayDate = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String todayString = dateFormat.format(todayDate);
+        Date currentDate = new Date();
+        Date userDate = new Date();
+        try {
+            currentDate = dateFormat.parse(todayString);
+            userDate = dateFormat.parse(date.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (!date.getText().equals("Pick a date")) {
+            if (userDate.compareTo(currentDate) > 0) {
+                Log.d("Success", "Strings parsed");
+                startDate = userDate.toString();
+                untilDate = endDate;
+                System.out.println(startDate);
+                System.out.println(untilDate);
+                getPlaces();
+            } else {
+                Toast.makeText(SecondActivity.this, "Invalid Starting Date chosen! Please choose a date after the current date.", Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
 }

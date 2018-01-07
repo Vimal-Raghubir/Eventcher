@@ -53,7 +53,7 @@ public class DatePickerFragment extends DialogFragment
         // Do something with the date chosen by the user
 
         //Button dateSpinner = (Button) view.findViewById(R.id.dateSpinner);
-        mListener.setButtontext(DatePickerFragment.this, Integer.toString(year) + "/" + Integer.toString(month + 1) + "/" + Integer.toString(day));
+        mListener.setButtontext(DatePickerFragment.this, Integer.toString(year) + "-" + Integer.toString(month + 1) + "-" + Integer.toString(day));
 
     }
 }

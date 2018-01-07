@@ -21,6 +21,7 @@ import com.yuyakaido.android.cardstackview.SwipeDirection;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,16 +31,26 @@ public class EventDisplayActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private CardStackView cardStackView;
     private TouristSpotCardAdapter adapter;
-    private List<Event> spots;
+    private ArrayList<Event> spots;
     private int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_display);
+        spots = new ArrayList<>();
         counter = 0;
         setup();
         reload();
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+           ArrayList temp = (ArrayList<Event>) intent.getSerializableExtra("eventList");
+           boolean flag = temp.removeAll(spots);
+            spots.addAll(temp);
+            Log.d("Intent", Integer.toString(spots.size()));
+            setup();
+            reload();
     }
 
     @Override
@@ -88,9 +99,9 @@ public class EventDisplayActivity extends AppCompatActivity {
     }
 
     private List<Event> createEvents() {
-            spots = new ArrayList<>();
         try {
-            spots = (List<Event>) getIntent().getSerializableExtra("eventList");
+            //spots = (ArrayList<Event>) getIntent().getSerializableExtra("eventList");
+
         }catch (Exception e) {
             e.printStackTrace();
         }

@@ -15,6 +15,7 @@
             android:value="@string/facebook_app_id" />
         <activity
             android:name=".EventDisplayActivity"
+            android:launchMode="singleTop"
             android:label="@string/app_name"></activity>
         <activity android:name=".EventDetailsActivity" />
         <activity android:name=".MainActivity">
