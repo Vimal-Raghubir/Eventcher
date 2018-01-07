@@ -1,7 +1,6 @@
 package com.yuyakaido.android.cardstackview.sample;
 
 import android.Manifest;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.location.*;
 import android.widget.Toast;
+import android.app.DialogFragment;
 
 import com.facebook.CallbackManager;
 import com.facebook.AccessToken;
@@ -78,9 +78,9 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-              //  getLocation();
+                getLocation();
 
-                findEvents();
+                //findEvents();
             }
         });
 
@@ -113,25 +113,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         */
 
       // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale( this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions( this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-            }
-        }
-        else { getPlaces(); }
-
+        //getLocation();
     Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
 
     dateSpinner.setOnClickListener(new View.OnClickListener() {
@@ -235,6 +217,8 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                                 if (response != null ){
                                     parsePlaces(response);
                                     Log.e("TEST","THREE");
+                                    //this.onCompleted(response);
+
                                 }
                             }
                         });
@@ -261,6 +245,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                 String p = place.getString("name");
                 getEvents(p);
             }
+            findEvents();
 
         }catch (Exception e){
             Log.e(TAG, "Place: ", e);
@@ -276,7 +261,9 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                     public void onCompleted(GraphResponse response) {
                         if (response != null ){
                             parseEvents(response);
+                            //this.onCompleted(response);
                         }
+                        findEvents();
                     }
                 });
 

@@ -10,7 +10,32 @@
         <item>Toronto</item>
         <item>Missisauga</item>
         <item>Barrie</item>
-        <item>New York</item>
-        <item>Vancouver</item>
+        <item>Vaughan</item>
+        <item>Hamilton</item>
+        <item>St.Thomas</item>
+        <item>Whitby</item>
+        <item>Pembroke</item>
+        <item>Markham</item>
+        <item>Burlington</item>
+        <item>St.Catharines</item>
+        <item>East York</item>
+        <item>Chatham-Kent</item>
+        <item>Brampton</item>
+    </string-array>
+    <string-array name="coordinates">
+        <item name="Toronto">43.6532, -79.3832</item>
+        <item name="Missisauga">43.595310, -79.640579</item>
+        <item name="Barrie">44.389355, -79.690331</item>
+        <item name="Vaughan">43.837208, -79.508278</item>
+        <item name="Hamilton">43.255203, -79.843826</item>
+        <item name="St.Thomas">42.778828, -81.175369</item>
+        <item name="Whitby">43.897545, -78.942932</item>
+        <item name="Pembroke">45.826653, -77.110886</item>
+        <item name="Markham">43.856098, -79.337021</item>
+        <item name="Burlington">43.328674, -79.817734</item>
+        <item name="St.Catharines">43.159374, -79.246864</item>
+        <item name="East York">43.691200, -79.341667</item>
+        <item name="Chatham-Kent">42.404804, -82.191040</item>
+        <item name="Brampton">43.683334, -79.766670</item>
     </string-array>
 </resources>
