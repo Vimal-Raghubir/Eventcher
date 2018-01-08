@@ -8,6 +8,12 @@
         android:id="@+id/menu_activity_main_logout"
         android:title="Logout"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/search_settings"
+        android:title="Change Search Settings"
+        app:showAsAction="never"
+        android:visible="false"
+        />
     <!--<item
         android:id="@+id/menu_activity_main_reload"
         android:title="Reload"

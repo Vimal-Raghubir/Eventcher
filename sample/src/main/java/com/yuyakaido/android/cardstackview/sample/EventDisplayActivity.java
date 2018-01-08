@@ -69,6 +69,9 @@ public class EventDisplayActivity extends AppCompatActivity {
             case R.id.menu_activity_main_logout:
                 Logout();
                 break;
+            case R.id.search_settings:
+                onBackPressed();
+                break;
             /*case R.id.menu_activity_main_reload:
                 reload();
                 break;
