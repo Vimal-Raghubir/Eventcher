@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -56,6 +57,8 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     String startDate;
     String untilDate;
     Profile profileCurrent;
+    Double globalLatitude;
+    Double globalLongitude;
 
     ArrayList<Event> events;
 
@@ -63,7 +66,6 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-
         events = new ArrayList<Event>();
         callbackManager = CallbackManager.Factory.create();
 
@@ -93,6 +95,9 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
         search.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if (events != null) {
+                    events.clear();
+                }
                 checkValues(dateSpinner);
 
                 //getLocation();
@@ -143,29 +148,44 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         dateSpinner.setText(l);
     }
     private void getLocation(){
-
+        String[] spinnerText;
+        Double latitude, longitude;
+        String[] coordinates;
         //TODO: get spinner input and set location accordingly
         //TODo: change date picker to spinner + dialog and set until date
+        Spinner spinner = (Spinner) findViewById(R.id.location);
+        int position = spinner.getSelectedItemPosition();
+        if (position != -1) {
+            if (position == 0) {
+                // Here, thisActivity is the current activity
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
 
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                    // Should we show an explanation?
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale( this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    } else {
 
+                        // No explanation needed, we can request the permission.
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+                    }
+                } else {
+                    getPlaces();
+                }
             } else {
-
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions( this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
+                coordinates = getResources().getStringArray(R.array.coordinates);
+                spinnerText = coordinates[position-1].split(",");
+                latitude = Double.parseDouble(spinnerText[0]);
+                longitude = Double.parseDouble(spinnerText[1]);
+                getPlaces(latitude, longitude, position);
+                Log.d("TESTlatitude", latitude.toString());
             }
         }
-        else { getPlaces(); }
     }
 
     private void findEvents() {
@@ -175,10 +195,10 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         eventIntent.putExtra("eventList", events);
         startActivity(eventIntent);
     }
-
     private void getPlaces() {
-        double longitude = -79.3832;
-        double latitude = 43.6532;
+        getPlaces(43.6532, -79.3832, 0);
+    }
+    private void getPlaces(double latitude,double longitude, int position) {
         Log.e("TEST","ONE");
 
         final LocationListener locationListener = new LocationListener() {
@@ -200,19 +220,23 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
             }
         };
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (position == 0) {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (locationManager != null) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (locationManager != null) {
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
+                    Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                if(location != null) {
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
+                    if (location != null) {
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                    }
                 }
+            }
+        }
                 Log.d("longitude", Double.toString(longitude));
                 Log.d("latitude", Double.toString(latitude));
                 Log.e("TEST","TWO");
@@ -240,8 +264,6 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                 param.putString("fields", "name");
                 request.setParameters(param);
                 request.executeAsync();
-            }
-        }
     }
 
     private void parsePlaces(GraphResponse places) {
@@ -279,7 +301,8 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         Bundle parameters = new Bundle();
         parameters.putString("type", "event");
         parameters.putString("q", p);
-        parameters.putString("fields", "name,description,id,cover,place,end_time,start_time");
+        parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
+        System.out.println(startDate + "," + untilDate);
         parameters.putString("since", startDate);
         parameters.putString("until", untilDate);
         parameters.putString("limit", "50");
@@ -381,31 +404,30 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
     public void checkValues(Button date) {
         String[] length = {"31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"};
-        String[] values = date.getText().toString().split("-");
-        int newMonth = Integer.parseInt(values[1]);
-        newMonth = newMonth + 1;
-
-        String endDate = values[0] + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
-
-        Date todayDate = Calendar.getInstance().getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String todayString = dateFormat.format(todayDate);
-        Date currentDate = new Date();
-        Date userDate = new Date();
-        try {
-            currentDate = dateFormat.parse(todayString);
-            userDate = dateFormat.parse(date.getText().toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         if (!date.getText().equals("Pick a date")) {
+            String[] values = date.getText().toString().split("-");
+            int newMonth = Integer.parseInt(values[1]);
+            newMonth = newMonth + 1;
+
+            String endDate = values[0] + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
+
+            Date todayDate = Calendar.getInstance().getTime();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String todayString = dateFormat.format(todayDate);
+            Date currentDate = new Date();
+            Date userDate = new Date();
+            try {
+                currentDate = dateFormat.parse(todayString);
+                userDate = dateFormat.parse(date.getText().toString());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             if (userDate.compareTo(currentDate) > 0) {
                 Log.d("Success", "Strings parsed");
-                startDate = userDate.toString();
+                startDate = date.getText().toString();
                 untilDate = endDate;
-                System.out.println(startDate);
-                System.out.println(untilDate);
-                getPlaces();
+                //System.out.println(startDate + "," + untilDate);
+                getLocation();
             } else {
                 Toast.makeText(SecondActivity.this, "Invalid Starting Date chosen! Please choose a date after the current date.", Toast.LENGTH_LONG).show();
             }

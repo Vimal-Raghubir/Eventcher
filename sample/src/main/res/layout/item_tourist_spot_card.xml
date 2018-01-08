@@ -31,40 +31,8 @@
                 android:id="@+id/item_tourist_spot_card_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="26sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/item_tourist_spot_card_city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/item_tourist_spot_card_desc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/item_tourist_spot_card_start_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/item_tourist_spot_card_end_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

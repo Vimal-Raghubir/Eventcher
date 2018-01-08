@@ -46,7 +46,11 @@ public class EventDisplayActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
            ArrayList temp = (ArrayList<Event>) intent.getSerializableExtra("eventList");
-           boolean flag = temp.removeAll(spots);
+           //boolean flag = temp.removeAll(spots);
+            spots.clear();
+            if (adapter != null) {
+                adapter.clear();
+            }
             spots.addAll(temp);
             Log.d("Intent", Integer.toString(spots.size()));
             setup();
