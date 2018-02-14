@@ -13,10 +13,11 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".EventDisplayActivity"
-            android:launchMode="singleTop"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name"
+            android:launchMode="singleTop" />
         <activity android:name=".EventDetailsActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -25,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SecondActivity"></activity>
+        <activity android:name=".SecondActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -42,6 +43,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>

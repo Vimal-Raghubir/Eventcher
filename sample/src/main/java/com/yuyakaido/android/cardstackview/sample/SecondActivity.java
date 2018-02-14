@@ -91,6 +91,9 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
             }
         });
 
+        Spinner local = (Spinner) findViewById(R.id.location);
+        //local.getse
+
         Button search = (Button) findViewById(R.id.search);
 
         search.setOnClickListener(new View.OnClickListener() {
@@ -397,6 +400,12 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         switch (item.getItemId()) {
             case R.id.menu_activity_main_logout:
                 Logout();
+                break;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.search_:
+                startActivity(new Intent(this,SecondActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

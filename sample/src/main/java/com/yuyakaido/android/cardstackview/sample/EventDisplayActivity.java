@@ -69,8 +69,12 @@ public class EventDisplayActivity extends AppCompatActivity {
             case R.id.menu_activity_main_logout:
                 Logout();
                 break;
-            case R.id.search_settings:
-                onBackPressed();
+            case R.id.settings:
+                //send intent to settings page
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.search_:
+                startActivity(new Intent(this,SecondActivity.class));
                 break;
             /*case R.id.menu_activity_main_reload:
                 reload();

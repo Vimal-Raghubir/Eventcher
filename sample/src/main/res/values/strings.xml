@@ -38,4 +38,15 @@
         <item name="Chatham-Kent">42.404804,-82.191040</item>
         <item name="Brampton">43.683334,-79.766670</item>
     </string-array>
+    <string-array name="date_range">
+        <item name="week">One Week</item>
+        <item name="2week">Two Weeks</item>
+        <item name="3week">Three Weeks</item>
+        <item name="month">One Month</item>
+    </string-array>
+
+    <string-array name="themes">
+        <item name="light">Light</item>
+        <item name="dark">Dark</item>
+    </string-array>
 </resources>
