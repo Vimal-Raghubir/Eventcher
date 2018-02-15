@@ -3,6 +3,7 @@ package com.yuyakaido.android.cardstackview.sample;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.icu.text.StringPrepParseException;
 import android.support.v4.app.ActivityCompat;
@@ -47,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
+import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_NAME;
 
 public class SecondActivity extends AppCompatActivity implements DatePickerFragment.DatePickerDialogListener {
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -59,11 +61,19 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     Profile profileCurrent;
     Double globalLatitude;
     Double globalLongitude;
+    String activityTheme;
 
     ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        activityTheme = settings.getString("theme", "Light");
+        if (activityTheme.equals("Light")) {
+            setTheme(R.style.Theme_AppCompat_Light);
+        } else {
+            setTheme(R.style.Theme_AppCompat);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
         events = new ArrayList<Event>();
@@ -141,6 +151,23 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String themeChoice = settings.getString("theme", "Light");
+        if (!activityTheme.equals(themeChoice)) {
+            if (themeChoice.equals("Light")) {
+                setTheme(R.style.Theme_AppCompat_Light);
+            } else {
+                setTheme(R.style.Theme_AppCompat);
+            }
+            activityTheme = themeChoice;
+            recreate();
+        }
+    }
+
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getFragmentManager(), "Date");
