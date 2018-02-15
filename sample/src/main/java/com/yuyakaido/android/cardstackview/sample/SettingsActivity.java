@@ -19,8 +19,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Adding comments to clarify what changed from yesterday
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        final String themeChoice = settings.getString("theme", "Light");
+        final String themeChoice = settings.getString("theme", "Light");        //This part is for changing theme before the settings page is loaded
         if (themeChoice.equals("Light")) {
             setTheme(R.style.Theme_AppCompat_Light);
         } else {
@@ -29,9 +30,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        final String dateRange = settings.getString("dateRange", "One Week");
+        final String dateRange = settings.getString("dateRange", "One Week");       //used for the dateRange dropdown menu along with default value
         final int locationDistance = settings.getInt("locationDistance", 50);
-        boolean nameChecked = settings.getBoolean("nameChecked", false);
+        boolean nameChecked = settings.getBoolean("nameChecked", false);            //for the checkboxes and default is false for now
         boolean dateChecked = settings.getBoolean("dateChecked", false);
         boolean descChecked = settings.getBoolean("descChecked", false);
 
@@ -39,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         final Spinner date_range = (Spinner) findViewById(R.id.date_range_spinner);
 
-        final CheckBox name = (CheckBox) findViewById(R.id.name_box);
+        final CheckBox name = (CheckBox) findViewById(R.id.name_box);                           //Reference to the checkbox and if it was checked before then check it again when settings is loaded
         if (nameChecked) {
             name.setChecked(true);
         }
@@ -55,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         int position = 0;
-        switch (dateRange) {
+        switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
             case "One Week":
                 position = 0;
                 break;
@@ -100,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putString("theme", theme.getSelectedItem().toString());
                 editor.putInt("locationDistance", location_range.getProgress());
                 editor.putString("dateRange", date_range.getSelectedItem().toString());
-                editor.putBoolean("nameChecked", name.isChecked());
+                editor.putBoolean("nameChecked", name.isChecked());                                 //To store the checkboxes checked/unchecked state
                 editor.putBoolean("dateChecked", date.isChecked());
                 editor.putBoolean("descChecked", desc.isChecked());
 
@@ -122,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putString("theme", "Light");
                 editor.putInt("locationDistance", 50);
                 editor.putString("dateRange", "One Week");
-                editor.putBoolean("nameChecked", false);
+                editor.putBoolean("nameChecked", false);                                            //Set it to default values
                 editor.putBoolean("dateChecked", false);
                 editor.putBoolean("descChecked", false);
 

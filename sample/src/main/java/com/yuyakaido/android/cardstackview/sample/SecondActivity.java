@@ -67,7 +67,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
         activityTheme = settings.getString("theme", "Light");
         if (activityTheme.equals("Light")) {
             setTheme(R.style.Theme_AppCompat_Light);
@@ -153,7 +153,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume() {                                                                     //Used for rendering the app theme
         super.onResume();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String themeChoice = settings.getString("theme", "Light");
