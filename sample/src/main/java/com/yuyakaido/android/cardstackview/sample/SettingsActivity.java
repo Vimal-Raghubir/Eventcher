@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,9 +29,48 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-
+        final String dateRange = settings.getString("dateRange", "One Week");
         final int locationDistance = settings.getInt("locationDistance", 50);
+        boolean nameChecked = settings.getBoolean("nameChecked", false);
+        boolean dateChecked = settings.getBoolean("dateChecked", false);
+        boolean descChecked = settings.getBoolean("descChecked", false);
+
         final SharedPreferences.Editor editor = settings.edit();
+
+        final Spinner date_range = (Spinner) findViewById(R.id.date_range_spinner);
+
+        final CheckBox name = (CheckBox) findViewById(R.id.name_box);
+        if (nameChecked) {
+            name.setChecked(true);
+        }
+
+        final CheckBox date = (CheckBox) findViewById(R.id.date_box);
+        if (dateChecked) {
+            date.setChecked(true);
+        }
+
+        final CheckBox desc = (CheckBox) findViewById(R.id.description_box);
+        if (descChecked) {
+            desc.setChecked(true);
+        }
+
+        int position = 0;
+        switch (dateRange) {
+            case "One Week":
+                position = 0;
+                break;
+            case "Two Weeks":
+                position = 1;
+                break;
+            case "Three Weeks":
+                position = 2;
+                break;
+            case "One Month":
+                position = 3;
+                break;
+        }
+
+        date_range.setSelection(position);
 
         final Spinner theme = (Spinner) findViewById(R.id.theme_spinner);
         theme.setSelection((themeChoice.equals("Light") ? 0 : 1));
@@ -59,6 +99,11 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editor.putString("theme", theme.getSelectedItem().toString());
                 editor.putInt("locationDistance", location_range.getProgress());
+                editor.putString("dateRange", date_range.getSelectedItem().toString());
+                editor.putBoolean("nameChecked", name.isChecked());
+                editor.putBoolean("dateChecked", date.isChecked());
+                editor.putBoolean("descChecked", desc.isChecked());
+
                 if (theme.getSelectedItem().toString().equals("Light")) {
                     setTheme(R.style.Theme_AppCompat_Light);
                 } else {
@@ -76,6 +121,16 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editor.putString("theme", "Light");
                 editor.putInt("locationDistance", 50);
+                editor.putString("dateRange", "One Week");
+                editor.putBoolean("nameChecked", false);
+                editor.putBoolean("dateChecked", false);
+                editor.putBoolean("descChecked", false);
+
+                name.setChecked(false);
+                date.setChecked(false);
+                desc.setChecked(false);
+
+                date_range.setSelection(0);
                 theme.setSelection(0);
                 location_range.setProgress(50);
                 setTheme(R.style.Theme_AppCompat_Light);

@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_NAME;
+
 public class EventDisplayActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
@@ -33,15 +36,39 @@ public class EventDisplayActivity extends AppCompatActivity {
     private TouristSpotCardAdapter adapter;
     private ArrayList<Event> spots;
     private int counter;
+    String activityTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        activityTheme = settings.getString("theme", "Light");
+        if (activityTheme.equals("Light")) {
+            setTheme(R.style.Theme_AppCompat_Light);
+        } else {
+            setTheme(R.style.Theme_AppCompat);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_display);
         spots = new ArrayList<>();
         counter = 0;
         setup();
         reload();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String themeChoice = settings.getString("theme", "Light");
+        if (!activityTheme.equals(themeChoice)) {
+            if (themeChoice.equals("Light")) {
+                setTheme(R.style.Theme_AppCompat_Light);
+            } else {
+                setTheme(R.style.Theme_AppCompat);
+            }
+            activityTheme = themeChoice;
+            recreate();
+        }
     }
     @Override
     protected void onNewIntent(Intent intent) {

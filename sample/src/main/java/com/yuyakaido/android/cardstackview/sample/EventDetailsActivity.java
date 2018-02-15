@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.login.LoginManager;
 
 import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_NAME;
 
@@ -48,5 +51,62 @@ public class EventDetailsActivity extends AppCompatActivity {
             activityTheme = themeChoice;
             recreate();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_activity_main_logout:
+                Logout();
+                break;
+            case R.id.settings:
+                //send intent to settings page
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.search_:
+                startActivity(new Intent(this,SecondActivity.class));
+                break;
+            /*case R.id.menu_activity_main_reload:
+                reload();
+                break;
+            case R.id.menu_activity_main_add_first:
+                addFirst();
+                break;
+            case R.id.menu_activity_main_add_last:
+                addLast();
+                break;
+            case R.id.menu_activity_main_remove_first:
+                removeFirst();
+                break;
+            case R.id.menu_activity_main_remove_last:
+                removeLast();
+                break;
+            case R.id.menu_activity_main_swipe_left:
+                swipeLeft();
+                break;
+            case R.id.menu_activity_main_swipe_right:
+                swipeRight();
+                break;
+            case R.id.menu_activity_main_reverse:
+                reverse();
+                break;
+        */
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void Logout() {
+        LoginManager.getInstance().logOut();
+
+        Intent leave = new Intent(this, MainActivity.class);
+        //leave.setAction(Intent.ACTION_MAIN);
+
+        startActivity(leave);
     }
 }
