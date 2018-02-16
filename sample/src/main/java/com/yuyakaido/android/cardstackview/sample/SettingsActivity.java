@@ -30,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        final String dateRange = settings.getString("dateRange", "One Week");       //used for the dateRange dropdown menu along with default value
+        final String dateRange = settings.getString("dateRange", "One Month");       //used for the dateRange dropdown menu along with default value
         final int locationDistance = settings.getInt("locationDistance", 50);
         boolean nameChecked = settings.getBoolean("nameChecked", false);            //for the checkboxes and default is false for now
         boolean dateChecked = settings.getBoolean("dateChecked", false);
@@ -57,18 +57,18 @@ public class SettingsActivity extends AppCompatActivity {
 
         int position = 0;
         switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
-            case "One Week":
+            case "One Month":
                 position = 0;
                 break;
-            case "Two Weeks":
+            case "Two Months":
                 position = 1;
                 break;
-            case "Three Weeks":
+            case "Three Months":
                 position = 2;
                 break;
-            case "One Month":
+            /*case "One Month":
                 position = 3;
-                break;
+                break;*/
         }
 
         date_range.setSelection(position);
@@ -122,7 +122,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 editor.putString("theme", "Light");
                 editor.putInt("locationDistance", 50);
-                editor.putString("dateRange", "One Week");
+                editor.putString("dateRange", "One Month");
                 editor.putBoolean("nameChecked", false);                                            //Set it to default values
                 editor.putBoolean("dateChecked", false);
                 editor.putBoolean("descChecked", false);

@@ -17,10 +17,14 @@ import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_
 
 public class EventDetailsActivity extends AppCompatActivity {
     String activityTheme;
+    Boolean name, date, description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                      //Used for rendering the app theme before page is created
         activityTheme = settings.getString("theme", "Light");
+        name = settings.getBoolean("nameChecked", true);
+        date = settings.getBoolean("dateChecked", true);
+        description = settings.getBoolean("descChecked", true);
         if (activityTheme.equals("Light")) {
             setTheme(R.style.Theme_AppCompat_Light);
         } else {
@@ -32,7 +36,21 @@ public class EventDetailsActivity extends AppCompatActivity {
         Event event = (Event) getIntent().getSerializableExtra("a1");
 
                 TextView textview = (TextView) findViewById(R.id.information);
-                textview.setText(event.toString());
+
+                String output = "";
+                if(name){
+                    output = "\nname: " +  event.getName() + " ";
+                }
+                if(description){
+                    output += "\ndescription: " +  event.getLongDescription() + " ";
+                }else{
+                    output += "\ndescription: " +  event.getShortDescription() + " ";
+                }
+                if(date){
+                    output += "\ndate: " +  event.getStartTime() + " ";
+                }
+
+                textview.setText(output);
         ImageView imageView = (ImageView) findViewById(R.id.cover);
         Glide.with(this).load(event.getCoverURL()).into(imageView);
     }
@@ -42,15 +60,22 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onResume();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String themeChoice = settings.getString("theme", "Light");
-        if (!activityTheme.equals(themeChoice)) {
+        Boolean cur_name = settings.getBoolean("nameChecked", true);
+        Boolean cur_date = settings.getBoolean("dateChecked", true);
+        Boolean cur_description = settings.getBoolean("descChecked", true);
+        if (!activityTheme.equals(themeChoice) || cur_name != name || cur_date != date || cur_description != description) {
             if (themeChoice.equals("Light")) {
                 setTheme(R.style.Theme_AppCompat_Light);
             } else {
                 setTheme(R.style.Theme_AppCompat);
             }
             activityTheme = themeChoice;
+            name = cur_name;
+            date = cur_date;
+            description = cur_description;
             recreate();
         }
+
     }
 
     @Override

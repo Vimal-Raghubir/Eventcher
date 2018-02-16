@@ -39,10 +39,9 @@
         <item name="Brampton">43.683334,-79.766670</item>
     </string-array>
     <string-array name="date_range">
-        <item name="week">One Week</item>
-        <item name="2week">Two Weeks</item>
-        <item name="3week">Three Weeks</item>
-        <item name="month">One Month</item>
+        <item name="one">One Month</item>
+        <item name="two">Two Months</item>
+        <item name="three">Three Months</item>
     </string-array>
 
     <string-array name="themes">

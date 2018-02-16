@@ -38,6 +38,7 @@ public class EventDisplayActivity extends AppCompatActivity {
     private int counter;
     String activityTheme;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
@@ -53,6 +54,7 @@ public class EventDisplayActivity extends AppCompatActivity {
         counter = 0;
         setup();
         reload();
+        Log.d("Dispaly TEST", spots.toString());
     }
 
     @Override
@@ -70,6 +72,7 @@ public class EventDisplayActivity extends AppCompatActivity {
             recreate();
         }
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
            ArrayList temp = (ArrayList<Event>) intent.getSerializableExtra("eventList");
@@ -138,7 +141,7 @@ public class EventDisplayActivity extends AppCompatActivity {
 
     private List<Event> createEvents() {
         try {
-            //spots = (ArrayList<Event>) getIntent().getSerializableExtra("eventList");
+            spots = (ArrayList<Event>) getIntent().getSerializableExtra("eventList");
 
         }catch (Exception e) {
             e.printStackTrace();

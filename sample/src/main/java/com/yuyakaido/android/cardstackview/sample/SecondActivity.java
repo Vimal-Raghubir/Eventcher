@@ -28,6 +28,7 @@ import com.facebook.CallbackManager;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.GraphRequest;
+import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
@@ -225,6 +226,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         eventIntent.putExtra("eventList", events);
         startActivity(eventIntent);
     }
+
     private void getPlaces() {
         getPlaces(43.6532, -79.3832, 0);
     }
@@ -289,24 +291,84 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                 Bundle param = new Bundle();
                 param.putString("type", "place");
                 param.putString("center", String.valueOf(latitude) + "," + String.valueOf(longitude) );//String.valueOf(locationManager.getLastKnownLocation(getApplicationContext().LOCATION_SERVICE).getLatitude()) + "," + String.valueOf(locationManager.getLastKnownLocation(getApplicationContext().LOCATION_SERVICE).getLongitude()));
-                param.putString("distance","100");
-                param.putString("limit", "5");
+                param.putString("distance","500");
+                param.putString("limit", "10");
                 param.putString("fields", "name");
                 request.setParameters(param);
                 request.executeAsync();
     }
 
     private void parsePlaces(GraphResponse places) {
+        /*Bundle parameters = new Bundle();
+        parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
+        //parameters.putString("limit", "20");
+        parameters.putString("since", startDate);
+       // parameters.putString("until", untilDate);
+*/
+
+
         try {
-            JSONObject plc = places.getJSONObject(); //new JSONObject(places.toString());//.getRawResponse();
+            JSONObject plc = places.getJSONObject();
             JSONArray jarray = plc.getJSONArray("data");
+
+            GraphRequestBatch batch = new GraphRequestBatch();
+
             for(int i = 1; i < jarray.length(); i++){
 
                 JSONObject place = jarray.getJSONObject(i);
                 String p = place.getString("name");
-                getEvents(p);
+                //Log.e(TAG, "Place: "+ p);
+                //getEvents(p);
+/*
+                GraphRequest request = GraphRequest.newGraphPathRequest(
+                        accessToken,
+                        "/" + p + "/events",
+                        new GraphRequest.Callback() {
+                            @Override
+                            public void onCompleted(GraphResponse response) {
+                                if (response != null ){
+                                    parseEvents(response);
+                                    Log.d("Batch", response.toString());
+                                }
+                                //findEvents();
+                            }
+                        });*/
+                GraphRequest request = GraphRequest.newGraphPathRequest(
+                        accessToken,
+                        "/search",
+                        new GraphRequest.Callback() {
+                            @Override
+                            public void onCompleted(GraphResponse response) {
+                                if (response != null ){
+                                    parseEvents(response);
+                                    //this.onCompleted(response);
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("type", "event");
+                parameters.putString("q", p);
+                parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
+                parameters.putString("since", startDate);
+                parameters.putString("until", untilDate);
+                parameters.putString("limit", "50");
+                request.setParameters(parameters);
+
+                batch.add(request);
+
             }
-            findEvents();
+            Log.d("Batch Size", Integer.toString(batch.size()));
+            batch.addCallback(new GraphRequestBatch.Callback() {
+                @Override
+                public void onBatchCompleted(GraphRequestBatch graphRequests) {
+                    // Application code for when the batch finishes
+                    Log.d("TEST Evemts", Integer.toString(events.size()));
+                    findEvents();
+                }
+            });
+
+            batch.executeAsync();
+
 
         }catch (Exception e){
             Log.e(TAG, "Place: ", e);
@@ -314,6 +376,26 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     private void getEvents(String p) {
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                accessToken,
+                "/" + p + "/events",
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (response != null ){
+                            parseEvents(response);
+                        }
+                     //   findEvents();
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+
+        /*
         GraphRequest request = GraphRequest.newGraphPathRequest(
                 accessToken,
                 "/search",
@@ -337,7 +419,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         parameters.putString("until", untilDate);
         parameters.putString("limit", "50");
         request.setParameters(parameters);
-        request.executeAsync();
+        request.executeAsync();*/
     }
 
     private void parseEvents(GraphResponse events_response) {
@@ -351,6 +433,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                     JSONObject event = earray.getJSONObject(i);
                     Event new_event = new Event(event);
                     events.add(new_event);
+
                 }
 
             }
@@ -439,13 +522,43 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     public void checkValues(Button date) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String[] length = {"31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"};
         if (!date.getText().equals("Pick a date")) {
             String[] values = date.getText().toString().split("-");
             int newMonth = Integer.parseInt(values[1]);
-            newMonth = newMonth + 1;
+            int newYear = Integer.parseInt(values[0]);
 
-            String endDate = values[0] + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
+            String dateRange = settings.getString("dateRange", "One Month");
+
+            switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
+                case "One Month":
+                    if((newMonth  + 1) > 12 ){
+                    newMonth = 1;
+                    newYear +=1;
+                    }else{
+                        newMonth += 1;
+                    }
+                    break;
+                case "Two Months":
+                    if((newMonth  + 2) > 12 ){
+                        newMonth = (newMonth + 2) > 13 ? 2 : 1;
+                        newYear +=1;
+                    }else{
+                        newMonth += 2;
+                    }
+                    break;
+                case "Three Months":
+                    if((newMonth  + 3) > 12 ){
+                        newMonth = ((newMonth + 3) > 13 ? (newMonth +3 > 14 ? 3: 2): 1);
+                        newYear +=1;
+                    }else{
+                        newMonth += 3;
+                    }
+                    break;
+            }
+
+            String endDate = Integer.toString(newYear) + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
 
             Date todayDate = Calendar.getInstance().getTime();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -455,18 +568,21 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
             try {
                 currentDate = dateFormat.parse(todayString);
                 userDate = dateFormat.parse(date.getText().toString());
+                //untilDate = dateFormat.parse(endDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            if (userDate.compareTo(currentDate) > 0) {
-                Log.d("Success", "Strings parsed");
-                startDate = date.getText().toString();
+           // if (userDate.compareTo(currentDate) > 0) {
+
+                startDate = date.getText().toString(); // userDate;
                 untilDate = endDate;
+
+                Log.d("Dates", startDate + " " + untilDate) ;
                 //System.out.println(startDate + "," + untilDate);
                 getLocation();
-            } else {
-                Toast.makeText(SecondActivity.this, "Invalid Starting Date chosen! Please choose a date after the current date.", Toast.LENGTH_LONG).show();
-            }
+         //   } else {
+          //      Toast.makeText(SecondActivity.this, "Invalid Starting Date chosen! Please choose a date after the current date.", Toast.LENGTH_LONG).show();
+         //   }
         }
 
     }
