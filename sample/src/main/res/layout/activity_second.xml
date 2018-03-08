@@ -70,10 +70,49 @@
         android:layout_height="wrap_content"
 
 
-        android:layout_above="@+id/location"
         android:layout_alignStart="@+id/location"
-        android:layout_marginBottom="22dp"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="24dp"
         android:text="Pick a Date" />
+
+    <TextView
+        android:id="@+id/untilDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/textView3"
+        android:layout_centerVertical="true"
+        android:text="Until Date" />
+
+    <Button
+        android:id="@+id/untilDateSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_alignStart="@+id/location"
+        android:layout_centerVertical="true"
+        android:enabled="false"
+        android:text="Pick a Date" />
+
+    <EditText
+        android:id="@+id/keyword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/location"
+        android:layout_below="@+id/location"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="Optional Search Word"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/keyword"
+        android:layout_marginBottom="12dp"
+        android:layout_toStartOf="@+id/textView"
+        android:text="Keyword" />
 
 
 </RelativeLayout>

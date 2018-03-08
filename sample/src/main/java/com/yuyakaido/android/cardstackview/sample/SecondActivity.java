@@ -10,6 +10,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -18,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.location.*;
@@ -68,7 +71,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
         activityTheme = settings.getString("theme", "Light");
         if (activityTheme.equals("Light")) {
             setTheme(R.style.Theme_AppCompat_Light);
@@ -95,7 +98,42 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
         final Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
 
+        final Button untilDateSpinner = (Button) findViewById(R.id.untilDateSpinner);
+        //Continue code to create date functionality for untilDate
+        //TODO implement addTextChangedListener to perform untilDateSpinner logic
+        dateSpinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                untilDateSpinner.setEnabled(true);
+                String dateRange = settings.getString("dateRange", "One Month");
+                switch (dateRange) {
+                    case "One Month":
+                        break;
+                    case "Two Months":
+                        break;
+                    case "Three Months":
+                        break;
+                }
+            }
+        });
         dateSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(view);
+            }
+        });
+
+        untilDateSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showDatePickerDialog(view);
@@ -299,14 +337,6 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     private void parsePlaces(GraphResponse places) {
-        /*Bundle parameters = new Bundle();
-        parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
-        //parameters.putString("limit", "20");
-        parameters.putString("since", startDate);
-       // parameters.putString("until", untilDate);
-*/
-
-
         try {
             JSONObject plc = places.getJSONObject();
             JSONArray jarray = plc.getJSONArray("data");
@@ -375,55 +405,12 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         }
     }
 
-    private void getEvents(String p) {
-        GraphRequest request = GraphRequest.newGraphPathRequest(
-                accessToken,
-                "/" + p + "/events",
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        if (response != null ){
-                            parseEvents(response);
-                        }
-                     //   findEvents();
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
-        request.setParameters(parameters);
-        request.executeAsync();
-
-
-        /*
-        GraphRequest request = GraphRequest.newGraphPathRequest(
-                accessToken,
-                "/search",
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        if (response != null ){
-                            parseEvents(response);
-                            //this.onCompleted(response);
-                        }
-                        findEvents();
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("type", "event");
-        parameters.putString("q", p);
-        parameters.putString("fields", "name,description,id,cover,place,start_time,end_time");
-        System.out.println(startDate + "," + untilDate);
-        parameters.putString("since", startDate);
-        parameters.putString("until", untilDate);
-        parameters.putString("limit", "50");
-        request.setParameters(parameters);
-        request.executeAsync();*/
+    private void getEventsBySearchWord(String p) {
+        //parse events by keyword
     }
 
     private void parseEvents(GraphResponse events_response) {
-
+        EditText searchKeyword = (EditText) findViewById(R.id.keyword);
         try {
             JSONObject evts = events_response.getJSONObject();
             if(evts != null){
@@ -432,7 +419,12 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                 for(int i = 0; i < earray.length(); i++) {
                     JSONObject event = earray.getJSONObject(i);
                     Event new_event = new Event(event);
-                    events.add(new_event);
+                    Log.d("searchKeyword", searchKeyword.getText().toString());
+                    if (searchKeyword.getText() == null) {
+                        events.add(new_event);
+                    } else if (new_event.getName().contains(searchKeyword.getText()) || new_event.getLongDescription().contains(searchKeyword.getText())) {
+                        events.add(new_event);
+                    }
 
                 }
 
