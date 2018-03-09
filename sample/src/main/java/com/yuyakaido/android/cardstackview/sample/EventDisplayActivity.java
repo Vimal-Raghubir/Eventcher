@@ -42,8 +42,8 @@ public class EventDisplayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
-        activityTheme = settings.getString("theme", "Light");
-        if (activityTheme.equals("Light")) {
+        activityTheme = settings.getString("theme", "Daylight");
+        if (activityTheme.equals("Daylight")) {
             setTheme(R.style.Theme_AppCompat_Light);
         } else {
             setTheme(R.style.Theme_AppCompat);
@@ -61,9 +61,9 @@ public class EventDisplayActivity extends AppCompatActivity {
     protected void onResume() {                                                                     //Used for rendering the app theme
         super.onResume();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        String themeChoice = settings.getString("theme", "Light");
+        String themeChoice = settings.getString("theme", "Daylight");
         if (!activityTheme.equals(themeChoice)) {
-            if (themeChoice.equals("Light")) {
+            if (themeChoice.equals("Daylight")) {
                 setTheme(R.style.Theme_AppCompat_Light);
             } else {
                 setTheme(R.style.Theme_AppCompat);
@@ -105,6 +105,12 @@ public class EventDisplayActivity extends AppCompatActivity {
                 break;
             case R.id.search_:
                 startActivity(new Intent(this,SecondActivity.class));
+                break;
+            case R.id.about:
+                startActivity(new Intent(this,AboutActivity.class));
+                break;
+            case R.id.support:
+                startActivity(new Intent(this, SupportActivity.class));
                 break;
             /*case R.id.menu_activity_main_reload:
                 reload();

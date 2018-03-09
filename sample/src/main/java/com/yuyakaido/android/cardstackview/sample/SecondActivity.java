@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.icu.text.StringPrepParseException;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.*;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,14 +66,15 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     Double globalLatitude;
     Double globalLongitude;
     String activityTheme;
+    int id = 0;
 
     ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
-        activityTheme = settings.getString("theme", "Light");
-        if (activityTheme.equals("Light")) {
+        activityTheme = settings.getString("theme", "Daylight");
+        if (activityTheme.equals("Daylight")) {
             setTheme(R.style.Theme_AppCompat_Light);
         } else {
             setTheme(R.style.Theme_AppCompat);
@@ -114,21 +115,52 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
 
             @Override
             public void afterTextChanged(Editable s) {
+                int newMonth,newYear;
+                String[] length = {"31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"};
                 untilDateSpinner.setEnabled(true);
+                String startingDate = dateSpinner.getText().toString();
+
+                Log.d("startingDate", startingDate);
                 String dateRange = settings.getString("dateRange", "One Month");
-                switch (dateRange) {
+                String[] values = startingDate.split("-");
+                newMonth = Integer.parseInt(values[1]);
+                newYear = Integer.parseInt(values[0]);
+
+                switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
                     case "One Month":
+                        if((newMonth  + 1) > 12 ){
+                            newMonth = 1;
+                            newYear +=1;
+                        }else{
+                            newMonth += 1;
+                        }
                         break;
                     case "Two Months":
+                        if((newMonth  + 2) > 12 ){
+                            newMonth = (newMonth + 2) > 13 ? 2 : 1;
+                            newYear +=1;
+                        }else{
+                            newMonth += 2;
+                        }
                         break;
                     case "Three Months":
+                        if((newMonth  + 3) > 12 ){
+                            newMonth = ((newMonth + 3) > 13 ? (newMonth +3 > 14 ? 3: 2): 1);
+                            newYear +=1;
+                        }else{
+                            newMonth += 3;
+                        }
                         break;
                 }
+
+                String endDate = Integer.toString(newYear) + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
+                untilDateSpinner.setText(endDate);
             }
         });
         dateSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                id = 1;
                 showDatePickerDialog(view);
             }
         });
@@ -136,6 +168,7 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
         untilDateSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                id = 2;
                 showDatePickerDialog(view);
             }
         });
@@ -195,9 +228,9 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     protected void onResume() {                                                                     //Used for rendering the app theme
         super.onResume();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        String themeChoice = settings.getString("theme", "Light");
+        String themeChoice = settings.getString("theme", "Daylight");
         if (!activityTheme.equals(themeChoice)) {
-            if (themeChoice.equals("Light")) {
+            if (themeChoice.equals("Daylight")) {
                 setTheme(R.style.Theme_AppCompat_Light);
             } else {
                 setTheme(R.style.Theme_AppCompat);
@@ -213,8 +246,15 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     public void setButtontext(DialogFragment dialog, String l){
-        Button dateSpinner = (Button) findViewById(R.id.dateSpinner);
-        dateSpinner.setText(l);
+        Button spinner;
+        Log.d("id", Integer.toString(id));
+        if (id == 1) {
+            spinner = (Button) findViewById(R.id.dateSpinner);
+        } else {
+            spinner = (Button) findViewById(R.id.untilDateSpinner);
+        }
+        //if (dialog)
+        spinner.setText(l);
     }
     private void getLocation(){
         String[] spinnerText;
@@ -508,6 +548,12 @@ public class SecondActivity extends AppCompatActivity implements DatePickerFragm
                 break;
             case R.id.search_:
                 startActivity(new Intent(this,SecondActivity.class));
+                break;
+            case R.id.about:
+                startActivity(new Intent(this,AboutActivity.class));
+                break;
+            case R.id.support:
+                startActivity(new Intent(this, SupportActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

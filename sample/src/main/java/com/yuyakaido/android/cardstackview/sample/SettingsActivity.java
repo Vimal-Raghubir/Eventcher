@@ -21,8 +21,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         //Adding comments to clarify what changed from yesterday
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        final String themeChoice = settings.getString("theme", "Light");        //This part is for changing theme before the settings page is loaded
-        if (themeChoice.equals("Light")) {
+        final String themeChoice = settings.getString("theme", "Daylight");        //This part is for changing theme before the settings page is loaded
+        if (themeChoice.equals("Daylight")) {
             setTheme(R.style.Theme_AppCompat_Light);
         } else {
             setTheme(R.style.Theme_AppCompat);
@@ -74,7 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
         date_range.setSelection(position);
 
         final Spinner theme = (Spinner) findViewById(R.id.theme_spinner);
-        theme.setSelection((themeChoice.equals("Light") ? 0 : 1));
+        theme.setSelection((themeChoice.equals("Daylight") ? 0 : 1));
         final SeekBar location_range = (SeekBar) findViewById(R.id.location_spinner);
         final TextView progress = (TextView) findViewById(R.id.spinner_value);
 
@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putBoolean("dateChecked", date.isChecked());
                 editor.putBoolean("descChecked", desc.isChecked());
 
-                if (theme.getSelectedItem().toString().equals("Light")) {
+                if (theme.getSelectedItem().toString().equals("Daylight")) {
                     setTheme(R.style.Theme_AppCompat_Light);
                 } else {
                     setTheme(R.style.Theme_AppCompat);

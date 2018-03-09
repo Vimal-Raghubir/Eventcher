@@ -12,6 +12,14 @@
         android:title="Settings"
         app:showAsAction="never" />
     <item
+        android:id="@+id/about"
+        android:title="About"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/support"
+        android:title="Support"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/menu_activity_main_logout"
         android:title="Logout"
         app:showAsAction="never"/>

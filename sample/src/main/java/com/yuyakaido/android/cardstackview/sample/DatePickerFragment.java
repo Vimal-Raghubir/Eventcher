@@ -17,7 +17,6 @@ import android.widget.Spinner;
 
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
-
     public interface DatePickerDialogListener {
         public void setButtontext(DialogFragment dialog, String l);
     }
