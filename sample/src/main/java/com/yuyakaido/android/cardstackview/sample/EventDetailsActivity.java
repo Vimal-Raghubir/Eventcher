@@ -53,6 +53,13 @@ public class EventDetailsActivity extends AppCompatActivity {
                 textview.setText(output);
         ImageView imageView = (ImageView) findViewById(R.id.cover);
         Glide.with(this).load(event.getCoverURL()).into(imageView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
     }
 
     @Override

@@ -354,7 +354,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                 batch.add(request);
 
             }
-           éé Log.d("Batch Size", Integer.toString(batch.size()));
+           // Log.d("Batch Size", Integer.toString(batch.size()));
             batch.addCallback(new GraphRequestBatch.Callback() {
                 @Override
                 public void onBatchCompleted(GraphRequestBatch graphRequests) {
