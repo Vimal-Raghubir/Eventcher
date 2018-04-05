@@ -33,4 +33,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>
 
+    <TextView
+        android:id="@+id/no_events"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Events Available"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:visibility="invisible" />
+
 </RelativeLayout>

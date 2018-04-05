@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yuyakaido.android.cardstackview.sample.SearchActivity">
+
+    <Button
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/keyword"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:text="Search" />
+
+    <Spinner
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignEnd="@+id/dateSpinner"
+        android:layout_below="@+id/searchTitle"
+        android:layout_marginTop="65dp"
+        android:entries="@array/locations_array" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignBaseline="@+id/dateSpinner"
+        android:layout_alignBottom="@+id/dateSpinner"
+        android:layout_marginEnd="28dp"
+        android:layout_toStartOf="@+id/profilePicture"
+        android:text="Starting Date" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/location"
+        android:layout_alignEnd="@+id/untilDate"
+        android:text="Location" />
+
+    <Button
+        android:id="@+id/dateSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/location"
+        android:layout_marginEnd="23dp"
+        android:layout_marginTop="44dp"
+        android:text="Pick a Date" />
+
+    <TextView
+        android:id="@+id/untilDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/untilDateSpinner"
+        android:layout_alignBottom="@+id/untilDateSpinner"
+        android:layout_alignParentStart="true"
+        android:text="Until Date" />
+
+    <Button
+        android:id="@+id/untilDateSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignStart="@+id/dateSpinner"
+        android:layout_below="@+id/dateSpinner"
+        android:layout_marginTop="29dp"
+        android:enabled="false"
+        android:text="Pick a Date" />
+
+    <EditText
+        android:id="@+id/keyword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/untilDateSpinner"
+        android:layout_below="@+id/untilDateSpinner"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="Optional Search Word"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/keyword"
+        android:layout_marginBottom="12dp"
+        android:layout_toStartOf="@+id/textView"
+        android:text="Keyword" />
+
+    <TextView
+        android:id="@+id/searchTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="Search Events"
+        android:textSize="24sp" />
+</RelativeLayout>

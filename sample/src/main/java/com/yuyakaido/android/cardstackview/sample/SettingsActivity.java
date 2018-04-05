@@ -1,11 +1,14 @@
 package com.yuyakaido.android.cardstackview.sample;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,6 +16,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 
 public class SettingsActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "SettingsFile";
@@ -120,7 +125,7 @@ public class SettingsActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editor.putString("theme", "Light");
+                editor.putString("theme", "Daylight");
                 editor.putInt("locationDistance", 50);
                 editor.putString("dateRange", "One Month");
                 editor.putBoolean("nameChecked", false);                                            //Set it to default values
@@ -139,5 +144,44 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.commit();
             }
         });
+    }
+
+    private void Logout() {
+        LoginManager.getInstance().logOut();
+
+        Intent leave = new Intent(this, MainActivity.class);
+        //leave.setAction(Intent.ACTION_MAIN);
+
+        startActivity(leave);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_activity_main_logout:
+                Logout();
+                break;
+            case R.id.profile:
+                startActivity(new Intent(this, SecondActivity.class));
+                break;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.search_:
+                startActivity(new Intent(this,SearchActivity.class));
+                break;
+            case R.id.about:
+                startActivity(new Intent(this,AboutActivity.class));
+                break;
+            case R.id.support:
+                startActivity(new Intent(this, SupportActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

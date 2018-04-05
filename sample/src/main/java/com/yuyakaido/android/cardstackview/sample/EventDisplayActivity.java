@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -99,12 +100,14 @@ public class EventDisplayActivity extends AppCompatActivity {
             case R.id.menu_activity_main_logout:
                 Logout();
                 break;
+            case R.id.profile:
+                startActivity(new Intent(this, SecondActivity.class));
+                break;
             case R.id.settings:
-                //send intent to settings page
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.search_:
-                startActivity(new Intent(this,SecondActivity.class));
+                startActivity(new Intent(this,SearchActivity.class));
                 break;
             case R.id.about:
                 startActivity(new Intent(this,AboutActivity.class));
@@ -112,31 +115,6 @@ public class EventDisplayActivity extends AppCompatActivity {
             case R.id.support:
                 startActivity(new Intent(this, SupportActivity.class));
                 break;
-            /*case R.id.menu_activity_main_reload:
-                reload();
-                break;
-            case R.id.menu_activity_main_add_first:
-                addFirst();
-                break;
-            case R.id.menu_activity_main_add_last:
-                addLast();
-                break;
-            case R.id.menu_activity_main_remove_first:
-                removeFirst();
-                break;
-            case R.id.menu_activity_main_remove_last:
-                removeLast();
-                break;
-            case R.id.menu_activity_main_swipe_left:
-                swipeLeft();
-                break;
-            case R.id.menu_activity_main_swipe_right:
-                swipeRight();
-                break;
-            case R.id.menu_activity_main_reverse:
-                reverse();
-                break;
-        */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -158,6 +136,10 @@ public class EventDisplayActivity extends AppCompatActivity {
     private TouristSpotCardAdapter createTouristSpotCardAdapter() {
         final TouristSpotCardAdapter adapter = new TouristSpotCardAdapter(getApplicationContext());
         adapter.addAll(createEvents());
+        if(spots.isEmpty()){
+            TextView no_events = (TextView) findViewById(R.id.no_events);
+            no_events.setVisibility(View.VISIBLE);
+        }
         return adapter;
     }
 
@@ -272,8 +254,9 @@ public class EventDisplayActivity extends AppCompatActivity {
 
     public void swipeLeft() {
         List<Event> spots = extractRemainingTouristSpots();
-        if (spots.isEmpty()) {
-            return;
+        if(spots.isEmpty()){
+            TextView no_events = (TextView) findViewById(R.id.no_events);
+            no_events.setVisibility(View.VISIBLE);
         }
 
         View target = cardStackView.getTopView();
@@ -297,8 +280,9 @@ public class EventDisplayActivity extends AppCompatActivity {
 
     public void swipeRight() {
         List<Event> spots = extractRemainingTouristSpots();
-        if (spots.isEmpty()) {
-            return;
+        if(spots.isEmpty()){
+            TextView no_events = (TextView) findViewById(R.id.no_events);
+            no_events.setVisibility(View.VISIBLE);
         }
 
         View target = cardStackView.getTopView();

@@ -42,12 +42,14 @@ public class AboutActivity extends AppCompatActivity {
             case R.id.menu_activity_main_logout:
                 Logout();
                 break;
+            case R.id.profile:
+                startActivity(new Intent(this, SecondActivity.class));
+                break;
             case R.id.settings:
-                //send intent to settings page
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.search_:
-                startActivity(new Intent(this,SecondActivity.class));
+                startActivity(new Intent(this,SearchActivity.class));
                 break;
             case R.id.about:
                 startActivity(new Intent(this,AboutActivity.class));
@@ -55,7 +57,6 @@ public class AboutActivity extends AppCompatActivity {
             case R.id.support:
                 startActivity(new Intent(this, SupportActivity.class));
                 break;
-
         }
         return super.onOptionsItemSelected(item);
     }
