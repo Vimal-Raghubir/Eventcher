@@ -35,4 +35,5 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
     compile project(':cardstackview')
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

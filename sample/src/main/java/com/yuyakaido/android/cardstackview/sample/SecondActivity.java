@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -43,6 +44,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -81,7 +87,6 @@ public class SecondActivity extends AppCompatActivity {
                     Profile oldProfile,
                     Profile currentProfile) {
                 // App code
-
             }
         };
 
@@ -94,8 +99,78 @@ public class SecondActivity extends AppCompatActivity {
             profileImage.setProfileId(profile.getId());
             text.setText(profile.getFirstName() + " " + profile.getLastName());
         }
+        final Spinner eventList = (Spinner) findViewById(R.id.EventList);
+        final ArrayList<Event> bookmarkedEvents = new ArrayList<Event>();
+        //Reading from file
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("bookmarkEvents.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (fis != null) {
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            try {
+                while ((line = bufferedReader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
+            //Converting string to an array of events
+            String tempstring = sb.toString();
+            Log.d("tempString", tempstring);
+            String[] eventarray = tempstring.split(";;;");
 
+            //Extracts names of the events in for loop below
+            ArrayList<String> eventnames = new ArrayList<String>();
+
+            for (int i = 0; i < eventarray.length; i++) {
+                String[] temp = eventarray[i].split("]]]");
+                Event event = new Event();
+                event.setName(temp[0]);
+                event.setDescription(temp[1]);
+                //event.setStart_time(new Date(temp[2]));
+                //event.setEnd_time(new Date(temp[3]));
+                event.setSource(temp[2]);
+                bookmarkedEvents.add(event);
+
+                eventnames.add(temp[0]);
+            }
+
+            //Sets spinner with the event names only
+            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventnames);
+            eventList.setAdapter(spinnerArrayAdapter);
+        }
+        //Sets button listener to extract user choice when selecting spinner option
+        Button bookmark = (Button) findViewById(R.id.ViewBookmark);
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Get string of selected choice
+                String text = eventList.getSelectedItem().toString();
+                if (text != null) {
+                    Event eventObject = new Event();
+                    Log.d("View Bookmark", text);
+                    //Loop through the events array and check the names of each event and compares it to passed in text
+                    for (int i = 0; i < bookmarkedEvents.size(); i++) {
+                        if (bookmarkedEvents.get(i).getName() == text) {
+                            Log.d("matchedObject", text);
+                            eventObject = bookmarkedEvents.get(i);
+                            break;
+                        }
+                    }
+                        //Pass intent to eventdetails page with event object
+                        Intent eventIntent = new Intent(getBaseContext().getApplicationContext(), EventDetailsActivity.class);
+                        eventIntent.putExtra("a1", eventObject);
+                        startActivity(eventIntent);
+                }
+            }
+            });
     }
 
     @Override

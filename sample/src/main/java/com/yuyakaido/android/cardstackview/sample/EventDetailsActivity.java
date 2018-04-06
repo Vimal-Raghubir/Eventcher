@@ -1,17 +1,26 @@
 package com.yuyakaido.android.cardstackview.sample;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
+
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_NAME;
 
@@ -33,29 +42,50 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
 
-        Event event = (Event) getIntent().getSerializableExtra("a1");
+        //final SharedPreferences.Editor editor = settings.edit();
 
-                TextView textview = (TextView) findViewById(R.id.information);
+        final Event event = (Event) getIntent().getSerializableExtra("a1");
 
-                String output = "";
-                if(name){
-                    output = "\nname: " +  event.getName() + " ";
-                }
-                if(description){
-                    output += "\ndescription: " +  event.getLongDescription() + " ";
-                }else{
-                    output += "\ndescription: " +  event.getShortDescription() + " ";
-                }
-                if(date){
-                    output += "\ndate: " +  event.getStartTime() + " ";
-                }
+        TextView textview = (TextView) findViewById(R.id.information);
 
-                textview.setText(output);
+        String output = "";
+        if (name) {
+            output = "<b>name: " + event.getName() + " ";
+        }
+        if (description) {
+            output += "<b>description: " + event.getLongDescription() + " ";
+        } else {
+            output += "<b>description: " + event.getShortDescription() + " ";
+        }
+        if (date) {
+            output += "<b>date: " + event.getStartTime() + " ";
+        }
+
+        textview.setText(Html.fromHtml(output));
+        textview.setMovementMethod(LinkMovementMethod.getInstance());
         ImageView imageView = (ImageView) findViewById(R.id.cover);
         Glide.with(this).load(event.getCoverURL()).into(imageView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
 
+
+        Button bookmark = (Button) findViewById(R.id.bookmark);
+
+        bookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String filename = "bookmarkEvents.txt";
+                FileOutputStream outputStream;
+                String eventdetails = event.getName() + "]]]" + event.getLongDescription() + "]]]" + event.getCoverURL() + ";;;";
+                try {
+                    outputStream = openFileOutput(filename, Context.MODE_APPEND);
+                    outputStream.write(eventdetails.getBytes());
+                    outputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     @Override
     public boolean onSupportNavigateUp(){
         finish();

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 public class TouristSpotCardAdapter extends ArrayAdapter<Event> {
 
@@ -37,7 +38,8 @@ public class TouristSpotCardAdapter extends ArrayAdapter<Event> {
         holder.start_time.setText(spot.getStartTime().toString());
         holder.end_time.setText(spot.getEndTime().toString());
         */
-        Glide.with(getContext()).load(spot.getCoverURL()).into(holder.image);
+        //Glide.with(getContext()).load(spot.getCoverURL()).into(holder.image);
+        Picasso.with(getContext()).load(spot.getCoverURL()).into(holder.image);
 
         return contentView;
     }

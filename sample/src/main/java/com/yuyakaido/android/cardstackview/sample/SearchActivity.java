@@ -387,7 +387,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
             if(evts != null) {
                 if (evts.getJSONArray("data").length() == 0) {
                     //TODO: fix image link in test events
-                    JSONObject o = new JSONObject("{\"data\":[{\"name\":\"test event\",\"description\":\"This is a test event\",\"id\":\"1111111\",\"source\":\"https://img-aws.ehowcdn.com/750x428p/cpi.studiod.com/www_ehow_com/i.ehow.com/images/a06/3a/be/study-compass-math-placement-test-800x800.jpg\" },{\"name\":\"test event no 2\",\"description\":\"This is another test event and I am adding more words to make this description longer just cause I felt like it.\",\"id\":\"1111112\",\"source\":\"https://img-aws.ehowcdn.com/750x428p/cpi.studiod.com/www_ehow_com/i.ehow.com/images/a06/3a/be/study-compass-math-placement-test-800x800.jpg\" }]}");
+                    JSONObject o = new JSONObject(getString(R.string.fake_news));
                     earray = o.getJSONArray("data");
                     Log.e("test array",earray.toString());
                 } else {
