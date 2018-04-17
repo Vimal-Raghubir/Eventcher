@@ -12,6 +12,7 @@
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
+        android:layout_marginTop="10dp"
         android:gravity="center">
 
     </com.facebook.login.widget.ProfilePictureView>
@@ -22,27 +23,65 @@
         android:id="@+id/textView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-
         android:layout_below="@+id/profilePicture"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="21dp" />
+        android:gravity="center"
+        android:textSize="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="21dp"/>
 
-    <Spinner
-        android:id="@+id/EventList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="50dp" />
-
-    <Button
-        android:id="@+id/ViewBookmark"
+    <TextView
+        android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/EventList"
+        android:text="My Bookmarks"
+        android:textAllCaps="true"
+        android:layout_below="@+id/textView"
+        android:paddingLeft="30dp"
+        android:textSize="18sp" />
+
+    <ScrollView
+            android:id="@+id/scroll_"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/textView10"
+            android:layout_marginBottom="20dp">
+    <LinearLayout
+        android:id="@+id/layoutb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"></LinearLayout>
+        </ScrollView>
+    <Button
+        android:id="@+id/goto_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scroll_"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp"
-        android:text="View Bookmark Event" />
+        android:text="Start Search"
+        />
 
+    <!--
+        <Spinner
+            android:id="@+id/EventList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="50dp" />
 
+        <Button
+            android:id="@+id/ViewBookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/EventList"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="86dp"
+            android:text="View Bookmark Event" />
+
+    -->
 </RelativeLayout>

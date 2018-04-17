@@ -18,10 +18,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.ServiceWorkerController;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.location.*;
@@ -99,7 +102,7 @@ public class SecondActivity extends AppCompatActivity {
             profileImage.setProfileId(profile.getId());
             text.setText(profile.getFirstName() + " " + profile.getLastName());
         }
-        final Spinner eventList = (Spinner) findViewById(R.id.EventList);
+       // final Spinner eventList = (Spinner) findViewById(R.id.EventList);
         final ArrayList<Event> bookmarkedEvents = new ArrayList<Event>();
         //Reading from file
         FileInputStream fis = null;
@@ -142,11 +145,57 @@ public class SecondActivity extends AppCompatActivity {
                 eventnames.add(temp[0]);
             }
 
+            LinearLayout ll_= (LinearLayout) findViewById(R.id.layoutb);
+
+            for(int i = 0; i < eventnames.size(); i++){
+                LinearLayout frame = new LinearLayout(SecondActivity.this);
+                frame.setOrientation(LinearLayout.HORIZONTAL);
+               // TextView e_name = new TextView(SecondActivity.this);
+               // e_name.setLayoutParams(new LinearLayout.LayoutParams(650,ViewGroup.LayoutParams.MATCH_PARENT));
+               // e_name.setTextSize(16);
+
+                Button e_button = new Button(SecondActivity.this);
+                e_button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+              //  e_name.setText(eventnames.get(i));
+                e_button.setText(eventnames.get(i));
+                //e_button.   (800005);
+                final int temp = i;
+                e_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Pass intent to eventdetails page with event object
+                        Intent eventIntent = new Intent(getBaseContext().getApplicationContext(), EventDetailsActivity.class);
+                        eventIntent.putExtra("a1", bookmarkedEvents.get(temp));
+                        startActivity(eventIntent);
+
+                    }
+                });
+               // frame.addView(e_name);
+                frame.addView(e_button);
+                frame.setHorizontalGravity(10);//800005
+                if(i % 2 == 0){
+             //       frame.setBackgroundColor(getResources().getColor(R.color.cardview_light_background));
+                }
+                else{
+              //      frame.setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+                }
+                ll_.addView(frame);
+            }
+
             //Sets spinner with the event names only
-            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventnames);
-            eventList.setAdapter(spinnerArrayAdapter);
+           // ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventnames);
+            //eventList.setAdapter(spinnerArrayAdapter);
         }
-        //Sets button listener to extract user choice when selecting spinner option
+
+        Button go_to = (Button) findViewById(R.id.goto_search);
+        go_to.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SecondActivity.this,SearchActivity.class));
+            }
+        });
+
+        /*/Sets button listener to extract user choice when selecting spinner option
         Button bookmark = (Button) findViewById(R.id.ViewBookmark);
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +219,7 @@ public class SecondActivity extends AppCompatActivity {
                         startActivity(eventIntent);
                 }
             }
-            });
+            });  */
     }
 
     @Override
