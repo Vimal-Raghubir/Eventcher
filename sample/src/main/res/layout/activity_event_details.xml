@@ -12,6 +12,13 @@
         android:layout_height="200dp"
         app:srcCompat="@drawable/com_facebook_button_login_silver_background" />
 
+    <LinearLayout
+        android:id="@+id/buttons_"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/cover">
+
     <Button
         android:id="@+id/bookmark"
         android:layout_width="match_parent"
@@ -19,18 +26,32 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
         android:text="Bookmark Event"
-        android:layout_below="@+id/cover"/>
+        />
+    <Button
+        android:id="@+id/unbookmark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:visibility="gone"
+        android:text="Remove Bookmarked Event"
+        />
+
+    </LinearLayout>
     <ScrollView
         android:id="@+id/scrollList"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/bookmark">
+        android:layout_below="@+id/buttons_">
 
         <TextView
             android:id="@+id/information"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="21dp"
+            android:layout_marginRight="21dp"
+            android:textSize="15dp"
             android:autoLink="all"/>
     </ScrollView>
 

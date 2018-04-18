@@ -43,7 +43,7 @@
     <ScrollView
             android:id="@+id/scroll_"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="310dp"
             android:layout_below="@+id/textView10"
             android:layout_marginBottom="20dp">
     <LinearLayout
@@ -65,23 +65,4 @@
         android:text="Start Search"
         />
 
-    <!--
-        <Spinner
-            android:id="@+id/EventList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView"
-            android:layout_marginTop="50dp" />
-
-        <Button
-            android:id="@+id/ViewBookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/EventList"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="86dp"
-            android:text="View Bookmark Event" />
-
-    -->
 </RelativeLayout>

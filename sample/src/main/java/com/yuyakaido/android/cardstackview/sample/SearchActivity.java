@@ -54,13 +54,15 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
     AccessTokenTracker accessTokenTracker;
     String startDate;
     String untilDate;
+    String end_Date_;
     int id = 0;
 
     ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                       //Used for rendering the app theme before page is created
+        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        //Used for rendering the app theme before page is created
         activityTheme = settings.getString("theme", "Daylight");
         if (activityTheme.equals("Daylight")) {
             setTheme(R.style.Theme_AppCompat_Light);
@@ -91,6 +93,36 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
         final Button untilDateSpinner = (Button) findViewById(R.id.untilDateSpinner);
         //Continue code to create date functionality for untilDate
         //TODO implement addTextChangedListener to perform untilDateSpinner logic
+        untilDateSpinner.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {
+                    String val = untilDateSpinner.getText().toString();
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    Date end_date = dateFormat.parse(val);
+                    Date start_ = dateFormat.parse(dateSpinner.getText().toString());
+                    if(start_.after(end_date)){
+                        Toast.makeText(SearchActivity.this, "Until Date cannot be before the start date", Toast.LENGTH_LONG).show();
+                        untilDateSpinner.setText(end_Date_);
+                    }
+                }
+                catch (Exception e){
+
+                }
+
+            }
+        });
         dateSpinner.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -142,8 +174,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                         break;
                 }
 
-                String endDate = Integer.toString(newYear) + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
-                untilDateSpinner.setText(endDate);
+                end_Date_ = Integer.toString(newYear) + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
+                untilDateSpinner.setText(end_Date_);
             }
         });
         dateSpinner.setOnClickListener(new View.OnClickListener() {
@@ -383,7 +415,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
             JSONObject evts = events_response.getJSONObject();
 
             JSONArray earray ;
-
+            //uses test data
             if(evts != null) {
                 if (evts.getJSONArray("data").length() == 0) {
                     //TODO: fix image link in test events
@@ -400,8 +432,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                     Log.d("searchKeyword", searchKeyword.getText().toString());
                     if (searchKeyword.getText() == null) {
                         events.add(new_event);
+                        Log.d("url_pic", "tesst anything");// events.get(i).getCoverURL());
                     } else if (new_event.getName().contains(searchKeyword.getText()) || new_event.getLongDescription().contains(searchKeyword.getText())) {
                         events.add(new_event);
+                        Log.d("url_pic",  events.get(i).getCoverURL());
                     }
 
                 }
@@ -484,16 +518,18 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
         Date todayDate = Calendar.getInstance().getTime();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String todayString = dateFormat.format(todayDate);
-        Log.d("Current Date", todayDate.toString());
+
 
         String[] values;
         if (date.getText().equals("Current Date")) {
             values = todayString.split("-");
+            startDate = todayString;
         }
         else{
             values = date.getText().toString().split("-");
+            startDate = date.getText().toString();
         }
-
+        Log.d("Current Date", values.toString());
         int newMonth = Integer.parseInt(values[1]);
         int newYear = Integer.parseInt(values[0]);
 
@@ -539,9 +575,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
             e.printStackTrace();
         }
 
-
-        startDate = date.getText().toString(); // userDate;
         untilDate = endDate;
+
 
         Log.d("Dates", startDate + " " + untilDate) ;
         //System.out.println(startDate + "," + untilDate);

@@ -66,8 +66,8 @@ import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_
 public class SecondActivity extends AppCompatActivity {
     ProfileTracker profileTracker;
     String activityTheme;
-
     int id = 0;
+    LinearLayout ll_;
 
     ArrayList<Event> events;
 
@@ -103,6 +103,19 @@ public class SecondActivity extends AppCompatActivity {
             text.setText(profile.getFirstName() + " " + profile.getLastName());
         }
        // final Spinner eventList = (Spinner) findViewById(R.id.EventList);
+
+        FetchBookmarks();
+
+        Button go_to = (Button) findViewById(R.id.goto_search);
+        go_to.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SecondActivity.this,SearchActivity.class));
+            }
+        });
+    }
+
+    void FetchBookmarks(){
         final ArrayList<Event> bookmarkedEvents = new ArrayList<Event>();
         //Reading from file
         FileInputStream fis = null;
@@ -125,40 +138,39 @@ public class SecondActivity extends AppCompatActivity {
             }
 
             //Converting string to an array of events
-            String tempstring = sb.toString();
-            Log.d("tempString", tempstring);
-            String[] eventarray = tempstring.split(";;;");
-
-            //Extracts names of the events in for loop below
             ArrayList<String> eventnames = new ArrayList<String>();
+            String tempstring = sb.toString();
+            Log.d("tempString", tempstring + "sdf");
+            if(!tempstring.isEmpty()){
+                String[] eventarray = tempstring.split(";;;");
 
-            for (int i = 0; i < eventarray.length; i++) {
-                String[] temp = eventarray[i].split("]]]");
-                Event event = new Event();
-                event.setName(temp[0]);
-                event.setDescription(temp[1]);
-                //event.setStart_time(new Date(temp[2]));
-                //event.setEnd_time(new Date(temp[3]));
-                event.setSource(temp[2]);
-                bookmarkedEvents.add(event);
+                //Extracts names of the events in for loop below
+                eventnames = new ArrayList<String>();
 
-                eventnames.add(temp[0]);
+                for (int i = 0; i < eventarray.length; i++) {
+                    Log.d("empty file", eventarray[i]);
+                    String[] temp = eventarray[i].split("]]]");
+                    Event event = new Event();
+                    event.setName(temp[0]);
+                    event.setDescription(temp[1]);
+                    //event.setStart_time(new Date(temp[2]));
+                    //event.setEnd_time(new Date(temp[3]));
+                    event.setSource(temp[2]);
+                    bookmarkedEvents.add(event);
+
+                    eventnames.add(temp[0]);
+                }
             }
-
-            LinearLayout ll_= (LinearLayout) findViewById(R.id.layoutb);
+            ll_= (LinearLayout) findViewById(R.id.layoutb);
+            ll_.removeAllViews();
 
             for(int i = 0; i < eventnames.size(); i++){
                 LinearLayout frame = new LinearLayout(SecondActivity.this);
                 frame.setOrientation(LinearLayout.HORIZONTAL);
-               // TextView e_name = new TextView(SecondActivity.this);
-               // e_name.setLayoutParams(new LinearLayout.LayoutParams(650,ViewGroup.LayoutParams.MATCH_PARENT));
-               // e_name.setTextSize(16);
 
                 Button e_button = new Button(SecondActivity.this);
                 e_button.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
-              //  e_name.setText(eventnames.get(i));
                 e_button.setText(eventnames.get(i));
-                //e_button.   (800005);
                 final int temp = i;
                 e_button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -170,58 +182,12 @@ public class SecondActivity extends AppCompatActivity {
 
                     }
                 });
-               // frame.addView(e_name);
                 frame.addView(e_button);
-                frame.setHorizontalGravity(10);//800005
-                if(i % 2 == 0){
-             //       frame.setBackgroundColor(getResources().getColor(R.color.cardview_light_background));
-                }
-                else{
-              //      frame.setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
-                }
+                frame.setHorizontalGravity(10);
                 ll_.addView(frame);
             }
-
-            //Sets spinner with the event names only
-           // ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventnames);
-            //eventList.setAdapter(spinnerArrayAdapter);
         }
-
-        Button go_to = (Button) findViewById(R.id.goto_search);
-        go_to.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SecondActivity.this,SearchActivity.class));
-            }
-        });
-
-        /*/Sets button listener to extract user choice when selecting spinner option
-        Button bookmark = (Button) findViewById(R.id.ViewBookmark);
-        bookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Get string of selected choice
-                String text = eventList.getSelectedItem().toString();
-                if (text != null) {
-                    Event eventObject = new Event();
-                    Log.d("View Bookmark", text);
-                    //Loop through the events array and check the names of each event and compares it to passed in text
-                    for (int i = 0; i < bookmarkedEvents.size(); i++) {
-                        if (bookmarkedEvents.get(i).getName() == text) {
-                            Log.d("matchedObject", text);
-                            eventObject = bookmarkedEvents.get(i);
-                            break;
-                        }
-                    }
-                        //Pass intent to eventdetails page with event object
-                        Intent eventIntent = new Intent(getBaseContext().getApplicationContext(), EventDetailsActivity.class);
-                        eventIntent.putExtra("a1", eventObject);
-                        startActivity(eventIntent);
-                }
-            }
-            });  */
     }
-
     @Override
     protected void onResume() {                                                                     //Used for rendering the app theme
         super.onResume();
@@ -236,6 +202,8 @@ public class SecondActivity extends AppCompatActivity {
             activityTheme = themeChoice;
             recreate();
         }
+
+        FetchBookmarks();
     }
 
 

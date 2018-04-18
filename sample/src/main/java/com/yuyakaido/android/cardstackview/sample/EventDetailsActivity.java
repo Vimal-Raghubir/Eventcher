@@ -8,17 +8,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.login.LoginManager;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +40,7 @@ import static com.yuyakaido.android.cardstackview.sample.SettingsActivity.PREFS_
 public class EventDetailsActivity extends AppCompatActivity {
     String activityTheme;
     Boolean name, date, description;
+    String[] eventarray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);                      //Used for rendering the app theme before page is created
@@ -50,15 +64,16 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         String output = "";
         if (name) {
-            output = "<b>name: " + event.getName() + " ";
+            output = "<b>Name: </b> " + event.getName() + "<br/><br/>";
         }
         if (description) {
-            output += "<b>description: " + event.getLongDescription() + " ";
+            output += "<b>Description:</b><br/> " + event.getLongDescription() + "<br/><br/>";
         } else {
-            output += "<b>description: " + event.getShortDescription() + " ";
+            output += "<b>Description:</b><br/> " + event.getShortDescription() + "<br/><br/>";
         }
         if (date) {
-            output += "<b>date: " + event.getStartTime() + " ";
+            SimpleDateFormat sdf_ = new SimpleDateFormat("MMMM, d, yyyy");
+            output += "<b>Date:</b> " + sdf_.format(event.getStartTime()) + "<br/><br/>";
         }
 
         textview.setText(Html.fromHtml(output));
@@ -68,7 +83,41 @@ public class EventDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        Button bookmark = (Button) findViewById(R.id.bookmark);
+        final Button bookmark = (Button) findViewById(R.id.bookmark);
+        final Button rem_bm = (Button) findViewById(R.id.unbookmark);
+
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("bookmarkEvents.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (fis != null) {
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            try {
+                //Log.d("tempString", tempstring);
+                while ((line = bufferedReader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            //Converting string to an array of events
+            String tempstring = sb.toString();
+            eventarray = tempstring.split(";;;");
+           // Log.d("eventarray", eventarray[1]);
+
+            for (int i = 0; i < eventarray.length; i++) {
+                if (eventarray[i].contains(event.getName())) {
+                    bookmark.setVisibility(View.GONE);
+                    rem_bm.setVisibility(View.VISIBLE);
+                }
+            }
+        }
 
         bookmark.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +132,45 @@ public class EventDetailsActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                bookmark.setVisibility(View.GONE);
+                rem_bm.setVisibility(View.VISIBLE);
+                Toast.makeText(EventDetailsActivity.this, "This event has been added to your bookmarks", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        rem_bm.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                String filename = "bookmarkEvents.txt";
+
+                FileOutputStream outputStream;
+                String lineToRemove = event.getName() + "]]]" + event.getLongDescription() + "]]]" + event.getCoverURL();
+                Log.d("eventarray", lineToRemove);
+                String currentLine;
+                try {
+                    outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < eventarray.length; i++) {
+                    // trim newline when comparing with lineToRemove
+                    Log.d("eventarray", eventarray[i]);
+                    if (!eventarray[i].contains(lineToRemove)) {//eventarray[i].equals(lineToRemove)) {
+                        try {
+                            outputStream = openFileOutput(filename, Context.MODE_APPEND);
+                            String temp = eventarray[i] + ";;;";
+                            Log.d("temp ", temp);
+                            outputStream.write(temp.getBytes());
+                            outputStream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                rem_bm.setVisibility(View.GONE);
+                bookmark.setVisibility(View.VISIBLE);
+                Toast.makeText(EventDetailsActivity.this, "This event has been removed from your bookmarks", Toast.LENGTH_SHORT).show();
             }
         });
     }
