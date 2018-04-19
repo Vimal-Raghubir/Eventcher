@@ -71,10 +71,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         } else {
             output += "<b>Description:</b><br/> " + event.getShortDescription() + "<br/><br/>";
         }
-        if (date) {
-            SimpleDateFormat sdf_ = new SimpleDateFormat("MMMM, d, yyyy");
-            output += "<b>Date:</b> " + sdf_.format(event.getStartTime()) + "<br/><br/>";
-        }
+            output += "<b>Date: </b> " + event.getDate() + "<br/><br/>";
+            output += "<b>Location: </b> " + event.getLocation() + "<br/><br/>";
+
 
         textview.setText(Html.fromHtml(output));
         textview.setMovementMethod(LinkMovementMethod.getInstance());
@@ -124,7 +123,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String filename = "bookmarkEvents.txt";
                 FileOutputStream outputStream;
-                String eventdetails = event.getName() + "]]]" + event.getLongDescription() + "]]]" + event.getCoverURL() + ";;;";
+                String eventdetails = event.getName() + "]]]" + event.getLongDescription() + "]]]" + event.getCoverURL() + "]]]" + event.getDate() + "]]]" + event.getLocation() + ";;;";
                 try {
                     outputStream = openFileOutput(filename, Context.MODE_APPEND);
                     outputStream.write(eventdetails.getBytes());
@@ -145,7 +144,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 String filename = "bookmarkEvents.txt";
 
                 FileOutputStream outputStream;
-                String lineToRemove = event.getName() + "]]]" + event.getLongDescription() + "]]]" + event.getCoverURL();
+                String lineToRemove = event.getName() + "]]]" + event.getLongDescription() + "]]]" + event.getCoverURL() + "]]]" + event.getDate() + "]]]" + event.getLocation();
                 Log.d("eventarray", lineToRemove);
                 String currentLine;
                 try {

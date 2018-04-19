@@ -410,7 +410,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
 
     private void parseEvents(GraphResponse events_response) {
         EditText searchKeyword = (EditText) findViewById(R.id.keyword);
-
+        Spinner locationChosen = (Spinner) findViewById(R.id.location);
         try {
             JSONObject evts = events_response.getJSONObject();
 
@@ -418,8 +418,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
             //uses test data
             if(evts != null) {
                 if (evts.getJSONArray("data").length() == 0) {
-                    //TODO: fix image link in test events
-                    JSONObject o = new JSONObject(getString(R.string.fake_news));
+                    JSONObject o = new JSONObject(getString(R.string.test_events));
                     earray = o.getJSONArray("data");
                     Log.e("test array",earray.toString());
                 } else {
@@ -430,14 +429,22 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                     JSONObject event = earray.getJSONObject(i);
                     Event new_event = new Event(event);
                     Log.d("searchKeyword", searchKeyword.getText().toString());
-                    if (searchKeyword.getText() == null) {
-                        events.add(new_event);
-                        Log.d("url_pic", "tesst anything");// events.get(i).getCoverURL());
-                    } else if (new_event.getName().contains(searchKeyword.getText()) || new_event.getLongDescription().contains(searchKeyword.getText())) {
-                        events.add(new_event);
-                        Log.d("url_pic",  events.get(i).getCoverURL());
+                    if (searchKeyword.getText().equals(null)) {
+                        //TODO: Implement filtering events based on date string from jsonobject
+                        //TODO: NOTE there are duplicates for events
+                        //Checks the choice from the location menu and compares the city with the location parameter of the new json objects or else if its current location just add the event
+                        if (locationChosen.getSelectedItem().equals(new_event.getLocation()) || locationChosen.getSelectedItem().equals("Use current Location")) {
+                            events.add(new_event);
+                            Log.d("url_pic", "tesst anything");// events.get(i).getCoverURL());
+                        }
+                        //had to add lowercase to the string since it wasn't correctly comparing strings with different cases
+                    } else if (new_event.getName().toLowerCase().contains(searchKeyword.getText().toString().toLowerCase()) || new_event.getLongDescription().toLowerCase().contains(searchKeyword.getText().toString().toLowerCase())) {
+                        if (locationChosen.getSelectedItem().equals(new_event.getLocation()) || locationChosen.getSelectedItem().equals("Use current Location")) {
+                            events.add(new_event);
+                            Log.d("url_pic", searchKeyword.getText().toString());
+                        }
+                        Log.d("url_pic", searchKeyword.getText().toString());
                     }
-
                 }
 
 

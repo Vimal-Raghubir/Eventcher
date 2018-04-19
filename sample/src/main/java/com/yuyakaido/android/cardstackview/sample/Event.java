@@ -22,7 +22,10 @@ public class Event implements Serializable {
     String name;
     String description;
     String id;
+    String actualdate;
+    String location;
     Date start_time;
+
     Date end_time;
     String source;
     String externalLink;
@@ -37,6 +40,8 @@ public class Event implements Serializable {
             name = event.getString("name");
             description = (event.has("description")) ? event.getString("description") : "";
             id = event.getString("id");
+            actualdate = (event.has("date")) ? event.getString("date") : null;
+            location = (event.has("location")) ? event.getString("location") : null;
             start_time = (event.has("start_time")) ? simpleDateFormat.parse(event.getString("start_time")) : null;
             end_time = (event.has("end_time")) ? simpleDateFormat.parse(event.getString("end_time")) : null;
 
@@ -67,6 +72,14 @@ public class Event implements Serializable {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setDate(String actualdate) {
+        this.actualdate = actualdate;
     }
 
     public String toString(){
@@ -102,5 +115,11 @@ public class Event implements Serializable {
         return source;
     }
 
+    public String getLocation() {
+        return location;
+    }
 
+    public String getDate() {
+        return actualdate;
+    }
 }

@@ -156,6 +156,8 @@ public class SecondActivity extends AppCompatActivity {
                     //event.setStart_time(new Date(temp[2]));
                     //event.setEnd_time(new Date(temp[3]));
                     event.setSource(temp[2]);
+                    event.setDate(temp[3]);
+                    event.setLocation(temp[4]);
                     bookmarkedEvents.add(event);
 
                     eventnames.add(temp[0]);
