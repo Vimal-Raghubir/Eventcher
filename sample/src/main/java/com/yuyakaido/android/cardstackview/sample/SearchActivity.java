@@ -55,13 +55,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
     String startDate;
     String untilDate;
     String end_Date_;
+    SharedPreferences settings;
     int id = 0;
 
     ArrayList<Event> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        settings = getSharedPreferences(PREFS_NAME, 0);
         //Used for rendering the app theme before page is created
         activityTheme = settings.getString("theme", "Daylight");
         if (activityTheme.equals("Daylight")) {
@@ -115,6 +116,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                     if(start_.after(end_date)){
                         Toast.makeText(SearchActivity.this, "Until Date cannot be before the start date", Toast.LENGTH_LONG).show();
                         untilDateSpinner.setText(end_Date_);
+                    }else{
+                        untilDate = val;
                     }
                 }
                 catch (Exception e){
@@ -355,7 +358,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
             JSONArray jarray = plc.getJSONArray("data");
 
             GraphRequestBatch batch = new GraphRequestBatch();
-
+//could by why duplicates
             for(int i = 1; i < jarray.length(); i++){
 
                 JSONObject place = jarray.getJSONObject(i);
@@ -422,28 +425,36 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                     earray = o.getJSONArray("data");
                     Log.e("test array",earray.toString());
                 } else {
-                     earray = evts.getJSONArray("data");
+                    earray = evts.getJSONArray("data");
                 }
                 Log.d("Array length", Integer.toString(earray.length()));
                 for (int i = 0; i < earray.length(); i++) {
                     JSONObject event = earray.getJSONObject(i);
                     Event new_event = new Event(event);
                     Log.d("searchKeyword", searchKeyword.getText().toString());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    Date event_date = dateFormat.parse(new_event.getDate());
+                    Date beginning_date = dateFormat.parse(startDate);
+                    Date final_date = dateFormat.parse(untilDate);
+                    Log.d("All dates", new_event.getDate() + startDate + untilDate);
+
                     if (searchKeyword.getText().equals(null)) {
                         //TODO: Implement filtering events based on date string from jsonobject
-                        //TODO: NOTE there are duplicates for events
                         //Checks the choice from the location menu and compares the city with the location parameter of the new json objects or else if its current location just add the event
-                        if (locationChosen.getSelectedItem().equals(new_event.getLocation()) || locationChosen.getSelectedItem().equals("Use current Location")) {
-                            events.add(new_event);
-                            Log.d("url_pic", "tesst anything");// events.get(i).getCoverURL());
+                        if (locationChosen.getSelectedItem().equals(new_event.getLocation()) || locationChosen.getSelectedItem().equals("Use current Location") && new_event.getLocation().equals("Toronto")) {
+                            if (event_date.before(final_date) && event_date.after(final_date)) {
+                                events.add(new_event);
+                                Log.d("url_pic", "tesst anything");
+                            }
                         }
                         //had to add lowercase to the string since it wasn't correctly comparing strings with different cases
                     } else if (new_event.getName().toLowerCase().contains(searchKeyword.getText().toString().toLowerCase()) || new_event.getLongDescription().toLowerCase().contains(searchKeyword.getText().toString().toLowerCase())) {
-                        if (locationChosen.getSelectedItem().equals(new_event.getLocation()) || locationChosen.getSelectedItem().equals("Use current Location")) {
-                            events.add(new_event);
-                            Log.d("url_pic", searchKeyword.getText().toString());
+                        if (locationChosen.getSelectedItem().equals(new_event.getLocation()) || locationChosen.getSelectedItem().equals("Use current Location") && new_event.getLocation().equals("Toronto")) {
+                            if (event_date.before(final_date) && event_date.after(beginning_date)) {
+                                events.add(new_event);
+                                Log.d("url_pic", searchKeyword.getText().toString());
+                            }
                         }
-                        Log.d("url_pic", searchKeyword.getText().toString());
                     }
                 }
 
@@ -453,9 +464,6 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
             Log.e(TAG, "Parse Event: ", ex);
         }
     }
-
-
-
 
 
     @Override
@@ -519,74 +527,46 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     public void checkValues(Button date) {
+        boolean current = true;
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String[] length = {"31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"};
 
         Date todayDate = Calendar.getInstance().getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         String todayString = dateFormat.format(todayDate);
-
-
+        int newMonth = 0, newYear = 0;
         String[] values;
+        String endDate = "";
         if (date.getText().equals("Current Date")) {
-            values = todayString.split("-");
+            values = todayString.split("/");
+            Log.d("values", values[0] + values[1]);
+            newMonth = Integer.parseInt(values[0]);
+            newYear = Integer.parseInt(values[2]);
             startDate = todayString;
+            Log.d("TodayString", todayString);
+            endDate = setUpdate(startDate);
         }
         else{
+            current = false;
+            Log.d("Button date", date.getText().toString());
             values = date.getText().toString().split("-");
+            newYear = Integer.parseInt(values[0]);
+            newMonth = Integer.parseInt(values[1]);
             startDate = date.getText().toString();
+            Button untilDateButton = (Button) findViewById(R.id.untilDateSpinner);
+            String[] parameters = untilDateButton.getText().toString().split("-");
+            endDate = parameters[1] + "/" + parameters[2] + "/" + parameters[0];
         }
-        Log.d("Current Date", values.toString());
-        int newMonth = Integer.parseInt(values[1]);
-        int newYear = Integer.parseInt(values[0]);
-
-        String dateRange = settings.getString("dateRange", "One Month");
-
-        switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
-            case "One Month":
-                if((newMonth  + 1) > 12 ){
-                    newMonth = 1;
-                    newYear +=1;
-                }else{
-                    newMonth += 1;
-                }
-                break;
-            case "Two Months":
-                if((newMonth  + 2) > 12 ){
-                    newMonth = (newMonth + 2) > 13 ? 2 : 1;
-                    newYear +=1;
-                }else{
-                    newMonth += 2;
-                }
-                break;
-            case "Three Months":
-                if((newMonth  + 3) > 12 ){
-                    newMonth = ((newMonth + 3) > 13 ? (newMonth +3 > 14 ? 3: 2): 1);
-                    newYear +=1;
-                }else{
-                    newMonth += 3;
-                }
-                break;
+        Log.d("ENDING DATE", endDate);
+        String beginDate = "";
+        if (current) {
+            beginDate = values[0] + "/" + values[1] + "/" + values[2];
+        } else {
+            beginDate = values[1] + "/" + values[2] + "/" + values[0];
         }
 
-        String endDate = Integer.toString(newYear) + "-" + Integer.toString(newMonth) + "-" + length[newMonth-1];
-
-
-        Date currentDate = new Date();
-        Date userDate = new Date();
-        try {
-            currentDate = dateFormat.parse(todayString);
-            userDate = dateFormat.parse(date.getText().toString());
-            //untilDate = dateFormat.parse(endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        startDate = beginDate;
         untilDate = endDate;
-
-
-        Log.d("Dates", startDate + " " + untilDate) ;
-        //System.out.println(startDate + "," + untilDate);
         getLocation();
     }
 
@@ -611,5 +591,64 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+
+    @Override
+    protected void onResume() {                                                                     //Used for rendering the app theme
+        super.onResume();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String themeChoice = settings.getString("theme", "Daylight");
+        if (!activityTheme.equals(themeChoice)) {
+            if (themeChoice.equals("Daylight")) {
+                setTheme(R.style.Theme_AppCompat_Light);
+            } else {
+                setTheme(R.style.Theme_AppCompat);
+            }
+            activityTheme = themeChoice;
+            recreate();
+        }
+
+    }
+
+    public String setUpdate(String startingDate) {
+        int newMonth,newYear;
+        String[] length = {"31", "28", "31", "30", "31", "30", "31", "31", "30", "31", "30", "31"};
+
+        Log.d("startingDate", startingDate);
+        String dateRange = settings.getString("dateRange", "One Month");
+        String[] values = startingDate.split("/");
+        newMonth = Integer.parseInt(values[0]);
+        newYear = Integer.parseInt(values[2]);
+
+        switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
+            case "One Month":
+                if ((newMonth + 1) > 12) {
+                    newMonth = 1;
+                    newYear += 1;
+                } else {
+                    newMonth += 1;
+                }
+                break;
+            case "Two Months":
+                if ((newMonth + 2) > 12) {
+                    newMonth = (newMonth + 2) > 13 ? 2 : 1;
+                    newYear += 1;
+                } else {
+                    newMonth += 2;
+                }
+                break;
+            case "Three Months":
+                if ((newMonth + 3) > 12) {
+                    newMonth = ((newMonth + 3) > 13 ? (newMonth + 3 > 14 ? 3 : 2) : 1);
+                    newYear += 1;
+                } else {
+                    newMonth += 3;
+                }
+                break;
+        }
+        Log.d("Month and Year", Integer.toString(newMonth + newYear));
+        return Integer.toString(newMonth) + "/" + length[newMonth-1] + "/" + Integer.toString(newYear);
+
     }
 }

@@ -21,7 +21,7 @@ import com.facebook.login.LoginManager;
 
 public class SettingsActivity extends AppCompatActivity {
     public static final String PREFS_NAME = "SettingsFile";
-
+    String activityTheme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Adding comments to clarify what changed from yesterday
@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         final Spinner date_range = (Spinner) findViewById(R.id.date_range_spinner);
 
-        final CheckBox name = (CheckBox) findViewById(R.id.name_box);                           //Reference to the checkbox and if it was checked before then check it again when settings is loaded
+    /*    final CheckBox name = (CheckBox) findViewById(R.id.name_box);                           //Reference to the checkbox and if it was checked before then check it again when settings is loaded
         if (nameChecked) {
             name.setChecked(true);
         }
@@ -58,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
         final CheckBox desc = (CheckBox) findViewById(R.id.description_box);
         if (descChecked) {
             desc.setChecked(true);
-        }
+        }*/
 
         int position = 0;
         switch (dateRange) {                                                                    //Used to set the dateRange dropdown menu with previous selection saved
@@ -106,9 +106,9 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putString("theme", theme.getSelectedItem().toString());
                 editor.putInt("locationDistance", location_range.getProgress());
                 editor.putString("dateRange", date_range.getSelectedItem().toString());
-                editor.putBoolean("nameChecked", name.isChecked());                                 //To store the checkboxes checked/unchecked state
+            /*    editor.putBoolean("nameChecked", name.isChecked());                                 //To store the checkboxes checked/unchecked state
                 editor.putBoolean("dateChecked", date.isChecked());
-                editor.putBoolean("descChecked", desc.isChecked());
+                editor.putBoolean("descChecked", desc.isChecked());*/
 
                 if (theme.getSelectedItem().toString().equals("Daylight")) {
                     setTheme(R.style.Theme_AppCompat_Light);
@@ -132,10 +132,10 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.putBoolean("dateChecked", false);
                 editor.putBoolean("descChecked", false);
 
-                name.setChecked(false);
+             /*   name.setChecked(false);
                 date.setChecked(false);
                 desc.setChecked(false);
-
+*/
                 date_range.setSelection(0);
                 theme.setSelection(0);
                 location_range.setProgress(50);
@@ -183,5 +183,21 @@ public class SettingsActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {                                                                     //Used for rendering the app theme
+        super.onResume();
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String themeChoice = settings.getString("theme", "Daylight");
+        if (!activityTheme.equals(themeChoice)) {
+            if (themeChoice.equals("Daylight")) {
+                setTheme(R.style.Theme_AppCompat_Light);
+            } else {
+                setTheme(R.style.Theme_AppCompat);
+            }
+            activityTheme = themeChoice;
+            recreate();
+        }
     }
 }

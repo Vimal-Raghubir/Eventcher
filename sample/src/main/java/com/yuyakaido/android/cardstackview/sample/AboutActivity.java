@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -27,7 +28,8 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
 
         TextView aboutDetails = (TextView) findViewById(R.id.AboutDetails);
-        aboutDetails.setText("Eventcher is an easy to use, a location-based social mobile app that finds events occurring in your area and connects you to them.\n It is a great way meet new people, make new friends who share common interests and experience the world in a new way.\n Simply use a swipe left and right technique to browse through the events and bookmark any events you are interested in. ");
+        String str = "Eventcher is an easy to use, a location-based social mobile app that finds events occurring in your area and connects you to them.<br/><br/> It is a great way meet new people, make new friends who share common interests and experience the world in a new way.<br/><br/> Simply use a swipe left and right technique to browse through the events and bookmark any events you are interested in. ";
+        aboutDetails.setText(Html.fromHtml(str));
     }
 
     @Override

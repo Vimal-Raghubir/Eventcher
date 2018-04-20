@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="400dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.yuyakaido.android.cardstackview.sample.SecondActivity">
 
@@ -43,8 +43,9 @@
     <ScrollView
             android:id="@+id/scroll_"
             android:layout_width="match_parent"
-            android:layout_height="310dp"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/textView10"
+            android:layout_above="@+id/rr"
             android:layout_marginBottom="20dp">
     <LinearLayout
         android:id="@+id/layoutb"
@@ -54,15 +55,24 @@
         android:layout_marginRight="20dp"
         android:orientation="vertical"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"></LinearLayout>
+        android:paddingRight="15dp"/>
         </ScrollView>
-    <Button
+
+    <RelativeLayout
+        android:id="@+id/rr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+        <Button
         android:id="@+id/goto_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/scroll_"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:text="Start Search"
         />
+    </RelativeLayout>
 
 </RelativeLayout>

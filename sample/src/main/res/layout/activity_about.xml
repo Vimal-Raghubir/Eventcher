@@ -14,8 +14,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="187dp"
+        android:textAlignment="center"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
         android:text="TextView"
-        android:textSize="18sp" />
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/AboutTitle"
@@ -33,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/AboutTitle"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         app:srcCompat="@mipmap/seal" />
 
 </RelativeLayout>

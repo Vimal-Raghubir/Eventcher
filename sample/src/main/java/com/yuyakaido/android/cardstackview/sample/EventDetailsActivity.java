@@ -63,9 +63,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         TextView textview = (TextView) findViewById(R.id.information);
 
         String output = "";
-        if (name) {
+       // if (name) {
             output = "<b>Name: </b> " + event.getName() + "<br/><br/>";
-        }
+      //  }
         if (description) {
             output += "<b>Description:</b><br/> " + event.getLongDescription() + "<br/><br/>";
         } else {

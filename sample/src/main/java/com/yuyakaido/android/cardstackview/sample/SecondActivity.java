@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.icu.text.StringPrepParseException;
+import android.os.Handler;
 import android.support.v4.app.*;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -68,6 +69,7 @@ public class SecondActivity extends AppCompatActivity {
     String activityTheme;
     int id = 0;
     LinearLayout ll_;
+    boolean doubleBackToExitPressedOnce = false;
 
     ArrayList<Event> events;
 
@@ -262,5 +264,27 @@ public class SecondActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            this.finish();
+            System.exit(0);
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }
