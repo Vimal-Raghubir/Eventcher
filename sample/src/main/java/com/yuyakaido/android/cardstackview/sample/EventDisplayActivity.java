@@ -165,6 +165,11 @@ public class EventDisplayActivity extends AppCompatActivity {
                     paginate();
                 }
                 counter++;
+
+                if(counter >= spots.size()){
+                    counter = 0;
+                }
+
             }
 
             @Override
