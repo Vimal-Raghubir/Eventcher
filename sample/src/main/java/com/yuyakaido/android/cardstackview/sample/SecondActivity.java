@@ -267,12 +267,17 @@ public class SecondActivity extends AppCompatActivity {
     }
 
 
-
+/*
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            this.finish();
-            System.exit(0);
+       if (doubleBackToExitPressedOnce) {
+           /* Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("EXIT", true);
+            startActivity(intent);
+            finish();
+            System.exit(0);*
+           super.onBackPressed();
             return;
         }
 
@@ -286,5 +291,5 @@ public class SecondActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
-    }
+    }*/
 }

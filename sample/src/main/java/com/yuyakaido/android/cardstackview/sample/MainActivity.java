@@ -33,13 +33,17 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         //check if user already logged in
-        if(AccessToken.getCurrentAccessToken() != null){ startActivity();}
+        if(AccessToken.getCurrentAccessToken() != null){
+            startActivity();
+            finish();
+        }
 
         LoginManager.getInstance().registerCallback(callbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
-                    public void onSuccess(LoginResult loginResult) {
+                    public void onSuccess(LoginResult loginResult){
                         startActivity();
+                        finish();
                     }
 
                     @Override

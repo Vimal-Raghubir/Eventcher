@@ -185,8 +185,8 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {                                                                     //Used for rendering the app theme
+   // @Override
+  /*  protected void onResume() {                                                                     //Used for rendering the app theme
         super.onResume();
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         String themeChoice = settings.getString("theme", "Daylight");
@@ -199,5 +199,5 @@ public class SettingsActivity extends AppCompatActivity {
             activityTheme = themeChoice;
             recreate();
         }
-    }
+    }*/
 }
