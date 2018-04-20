@@ -85,6 +85,7 @@ public class SecondActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+        invalidateOptionsMenu();
 
         profileTracker = new ProfileTracker() {
             @Override
@@ -229,15 +230,16 @@ public class SecondActivity extends AppCompatActivity {
     private void Logout() {
         LoginManager.getInstance().logOut();
 
-        Intent leave = new Intent(this, MainActivity.class);
-        //leave.setAction(Intent.ACTION_MAIN);
-
-        startActivity(leave);
+        Intent i = new Intent(this, MainActivity.class);
+// set the new task and clear flags
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
+
         return true;
     }
 
@@ -266,30 +268,10 @@ public class SecondActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-/*
     @Override
-    public void onBackPressed() {
-       if (doubleBackToExitPressedOnce) {
-           /* Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("EXIT", true);
-            startActivity(intent);
-            finish();
-            System.exit(0);*
-           super.onBackPressed();
-            return;
-        }
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.getItem(0).setEnabled(false);
+        return true;
+    }
 
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
-    }*/
 }

@@ -28,8 +28,10 @@ public class SupportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_support);
 
+        //invalidateOptionsMenu();
+
         TextView FAQDetails = (TextView) findViewById(R.id.FAQDetails);
-        String input = "<b>How do I change the location?</b><br><br> Go to the Search option from the drop-down menu (top right corner) and select your location. You can choose one of the pre-defined options or to search based on your current location.<br><br><b>How do I change the time for the search?</b><br><br>The starting date and end date can be configured on the Search page. Additionally, the default date range can be changed by accessing the Settings page from the drop-down menu and changing the Date Range value.<br><br><b>No events are being shown when entering a keyword.</b><br><br>If no events are being generated then try changing the search criteria. The more specific the search criteria the fewer events will be found. The keyword is an optional criterion and can be omitted when searching for events.<br><br><b>What if I don’t have a facebook account?</b><br><br>You can register for a free Facebook account at www.facebook.com. It is required to verify users.<br><br>Please click the <a href='https://goo.gl/forms/tfo9SRLkbNGcNb432'>link</a> to provide customer feedback";
+        String input = "<b>How do I change the location?</b><br><br> Go to the Search option from the drop-down menu (top right corner) and select your location. You can choose one of the pre-defined options or to search based on your current location.<br><br><b>How do I change the time for the search?</b><br><br>The starting date and end date can be configured on the Search page. Additionally, the default date range can be changed by accessing the Settings page from the drop-down menu and changing the Date Range value.<br><br><b>No events are being shown when entering a keyword.</b><br><br>If no events are being generated then try changing the search criteria. The more specific the search criteria the fewer events will be found. The keyword is an optional criterion and can be omitted when searching for events.<br><br><b>What if I don’t have a facebook account?</b><br><br>You can register for a free Facebook account <a href='www.facebook.com'>here</a>. It is required to verify users.<br><br>Please click the <a href='https://goo.gl/forms/tfo9SRLkbNGcNb432'>link</a> to provide customer feedback";
         FAQDetails.setText(Html.fromHtml(input));
         FAQDetails.setMovementMethod(LinkMovementMethod.getInstance());
         }
@@ -64,13 +66,19 @@ public class SupportActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.getItem(4).setEnabled(false);
+        return true;
+    }
+
     private void Logout() {
         LoginManager.getInstance().logOut();
 
-        Intent leave = new Intent(this, MainActivity.class);
-        //leave.setAction(Intent.ACTION_MAIN);
-
-        startActivity(leave);
+        Intent i = new Intent(this, MainActivity.class);
+// set the new task and clear flags
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 
     @Override

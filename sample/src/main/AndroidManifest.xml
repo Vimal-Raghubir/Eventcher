@@ -26,7 +26,8 @@
         </activity>
 
         <activity
-            android:name=".EventDetailsActivity">
+            android:name=".EventDetailsActivity"
+            android:noHistory="true">
             <!--android:parentActivityName=".EventDisplayActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

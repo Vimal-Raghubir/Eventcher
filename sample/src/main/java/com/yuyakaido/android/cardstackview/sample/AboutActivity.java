@@ -27,6 +27,8 @@ public class AboutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
 
+        invalidateOptionsMenu();
+
         TextView aboutDetails = (TextView) findViewById(R.id.AboutDetails);
         String str = "Eventcher is an easy to use, a location-based social mobile app that finds events occurring in your area and connects you to them.<br/><br/> It is a great way meet new people, make new friends who share common interests and experience the world in a new way.<br/><br/> Simply use a swipe left and right technique to browse through the events and bookmark any events you are interested in. ";
         aboutDetails.setText(Html.fromHtml(str));
@@ -62,13 +64,19 @@ public class AboutActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.getItem(3).setEnabled(false);
+        return true;
+    }
+
     private void Logout() {
         LoginManager.getInstance().logOut();
 
-        Intent leave = new Intent(this, MainActivity.class);
-        //leave.setAction(Intent.ACTION_MAIN);
-
-        startActivity(leave);
+        Intent i = new Intent(this, MainActivity.class);
+// set the new task and clear flags
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 
     @Override

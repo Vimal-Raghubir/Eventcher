@@ -236,9 +236,11 @@ public class EventDetailsActivity extends AppCompatActivity {
     private void Logout() {
         LoginManager.getInstance().logOut();
 
-        Intent leave = new Intent(this, MainActivity.class);
-        //leave.setAction(Intent.ACTION_MAIN);
-
-        startActivity(leave);
+        Intent i = new Intent(this, MainActivity.class);
+// set the new task and clear flags
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
+
+
 }

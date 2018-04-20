@@ -73,6 +73,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        invalidateOptionsMenu();
         events = new ArrayList<Event>();
         callbackManager = CallbackManager.Factory.create();
 
@@ -249,6 +250,11 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                     // Should we show an explanation?
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            Log.d("Location", "inside rationale");
+                        // No explanation needed, we can request the permission.
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
                     } else {
 
@@ -259,6 +265,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
 
                     }
                 } else {
+                    Log.d("Location", "calling get places");
                     getPlaces();
                 }
             } else {
@@ -481,13 +488,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    Toast.makeText(this, "Location Permission was allowed", Toast.LENGTH_LONG).show();
                     // permission was granted, yay!
                     getPlaces();
                 } else {
 
                     // permission denied, boo!
-                    getPlaces();
+                    //getPlaces();
+                    Toast.makeText(this, "Location Permission was denied", Toast.LENGTH_LONG).show();
 
                 }
                 return;
@@ -524,6 +532,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.getItem(1).setEnabled(false);
+        return true;
     }
 
     public void checkValues(Button date) {
@@ -573,10 +587,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerFragm
     private void Logout() {
         LoginManager.getInstance().logOut();
 
-        Intent leave = new Intent(this, MainActivity.class);
-        //leave.setAction(Intent.ACTION_MAIN);
-
-        startActivity(leave);
+        Intent i = new Intent(this, MainActivity.class);
+// set the new task and clear flags
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 
     private void startActivity() {

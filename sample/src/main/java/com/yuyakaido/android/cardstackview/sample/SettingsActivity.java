@@ -35,6 +35,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        invalidateOptionsMenu();
+
         final String dateRange = settings.getString("dateRange", "One Month");       //used for the dateRange dropdown menu along with default value
         final int locationDistance = settings.getInt("locationDistance", 50);
         boolean nameChecked = settings.getBoolean("nameChecked", false);            //for the checkboxes and default is false for now
@@ -149,10 +151,10 @@ public class SettingsActivity extends AppCompatActivity {
     private void Logout() {
         LoginManager.getInstance().logOut();
 
-        Intent leave = new Intent(this, MainActivity.class);
-        //leave.setAction(Intent.ACTION_MAIN);
-
-        startActivity(leave);
+        Intent i = new Intent(this, MainActivity.class);
+// set the new task and clear flags
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -185,19 +187,9 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-   // @Override
-  /*  protected void onResume() {                                                                     //Used for rendering the app theme
-        super.onResume();
-        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        String themeChoice = settings.getString("theme", "Daylight");
-        if (!activityTheme.equals(themeChoice)) {
-            if (themeChoice.equals("Daylight")) {
-                setTheme(R.style.Theme_AppCompat_Light);
-            } else {
-                setTheme(R.style.Theme_AppCompat);
-            }
-            activityTheme = themeChoice;
-            recreate();
-        }
-    }*/
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.getItem(2).setEnabled(false);
+        return true;
+    }
 }
